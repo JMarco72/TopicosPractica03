@@ -30,6 +30,5 @@ class SectorSeeder extends Seeder
         $s3->area = '100';
         $s3->district_id = 1;
         $s3->save();
-
     }
 }

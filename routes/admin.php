@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
 use App\Http\Controllers\admin\VehicleController;
 use App\Http\Controllers\admin\VehicleimagesController;
+use App\Http\Controllers\admin\VehicletypesController;
 use App\Http\Controllers\admin\ZoneController;
 use App\Http\Controllers\admin\ZonecoordController;
 
@@ -17,3 +18,5 @@ Route::get('modelsbybrand/{id}', [BrandmodelController::class, 'modelsbybrand'])
 Route::get('imageprofile/{id}/{vehicle_id}', [VehicleimagesController::class, 'profile'])->name('admin.imageprofile');
 Route::resource('zones', ZoneController::class)->names('admin.zones');
 Route::resource('zonecoords', ZonecoordController::class)->names('admin.zonecoords');
+
+Route::resource('vehicletypes', VehicletypesController::class)->names('admin.vehicletypes');

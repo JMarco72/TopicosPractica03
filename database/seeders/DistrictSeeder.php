@@ -14,10 +14,10 @@ class DistrictSeeder extends Seeder
     public function run(): void
     {
         $d1 = new District();
-        $d1->name = 'CHICLAYO';
-        $d1->code = '14001';
-        $d1->province_id = 1;
+        $d1->name = 'Chiclayo';
+        $d1->code = '14001';   
         $d1->department_id = 1;
+        $d1->province_id = 1;
         $d1->save();
     }
 }

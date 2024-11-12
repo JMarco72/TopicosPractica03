@@ -14,8 +14,8 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $d1 = new Department();
-        $d1->name = 'LAMBAYEQUE';
-        $d1->code = '10001';
+        $d1->name = 'Lambayeque';
+        $d1->code = '14001';   
         $d1->save();
     }
 }

@@ -341,10 +341,9 @@ return [
                     'route' => 'admin.models.index',
                     'icon' => 'fas fa-trailer',
                 ],
-               
                 [
                     'text' => 'Tipos',
-                    'url' => 'admin/settings',
+                    'route' => 'admin.vehicletypes.index',
                     'icon' => 'fas fa-truck-loading',
                 ],
                 [

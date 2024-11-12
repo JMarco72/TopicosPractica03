@@ -14,8 +14,8 @@ class ProvinceSeeder extends Seeder
     public function run(): void
     {
         $p1 = new Province();
-        $p1->name = 'CHICLAYO';
-        $p1->code = '14001';
+        $p1->name = 'Chiclayo';
+        $p1->code = '14001';   
         $p1->department_id = 1;
         $p1->save();
     }
