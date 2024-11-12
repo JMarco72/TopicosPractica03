@@ -341,6 +341,7 @@ return [
                     'route' => 'admin.models.index',
                     'icon' => 'fas fa-trailer',
                 ],
+               
                 [
                     'text' => 'Tipos',
                     'url' => 'admin/settings',
@@ -377,7 +378,7 @@ return [
         ],
         [
             'text' => 'Zonas',
-            'url' => 'admin/settings',
+            'route' => 'admin.zones.index',
             'icon' => 'fas fa-map-signs',
         ],
         [
