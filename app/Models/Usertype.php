@@ -30,4 +30,9 @@ class Usertype extends Model
     {
         return in_array($this->id, self::$protectedIds);
     }
+
+    public static function isProtectedId($id)
+{
+    return in_array($id, self::$protectedIds);
+}
 }

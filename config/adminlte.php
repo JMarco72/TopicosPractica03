@@ -366,7 +366,7 @@ return [
         ],
         [
             'text' => 'Tipos',
-            'url' => 'admin/settings',
+            'route' => 'admin.usertypes.index',
             'icon' => 'fas fa-user-tag',
         ],
         ['header' => 'GESTIÓN DE RUTAS'],
