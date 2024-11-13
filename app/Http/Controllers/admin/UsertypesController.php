@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\Usertype;
 use Illuminate\Http\Request;
 
 class UsertypesController extends Controller
@@ -49,16 +51,21 @@ class UsertypesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function destroy(Usertype $usertype)
     {
-        //
+        if ($usertype->isProtected()) {
+            return response()->json([
+                'message' => 'Este tipo de usuario es parte del sistema y no puede ser eliminado.'
+            ], 403);
+        }
+    
+        $usertype->delete();
+        return response()->json(['message' => 'Tipo de usuario eliminado con éxito']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
+//     @if(!$usertype->isProtected())
+//     <button onclick="deleteUsertype({{ $usertype->id }})">Eliminar</button>
+// @endif
+    
 }
