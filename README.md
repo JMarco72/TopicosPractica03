@@ -87,9 +87,9 @@ Actualizar cambios
 git pull origin main
 
 Subir cambios a git hub
-git ini
+git init
 git add .
-git checkout nombre_de_su_rama  -> para cambiarse de rama
+git checkout -b nombre_de_su_rama  -> para cambiarse de rama
 git commit -m "Mensaje de commit"
 git push -u origin tu_nombre_de_rama
 
