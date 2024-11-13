@@ -18,7 +18,7 @@ class Usertype extends Model
     {
         parent::boot();
 
-        static::deleting(function($usertype) {
+        static::deleting(function ($usertype) {
             if (in_array($usertype->id, self::$protectedIds)) {
                 throw new \Exception('Este tipo de usuario es parte del sistema y no puede ser eliminado.');
             }
@@ -32,7 +32,7 @@ class Usertype extends Model
     }
 
     public static function isProtectedId($id)
-{
-    return in_array($id, self::$protectedIds);
-}
+    {
+        return in_array($id, self::$protectedIds);
+    }
 }
