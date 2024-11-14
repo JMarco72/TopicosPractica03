@@ -4,12 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
+use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\UsertypesController;
 use App\Http\Controllers\admin\VehicleController;
 use App\Http\Controllers\admin\VehicleimagesController;
 use App\Http\Controllers\admin\VehicletypesController;
 use App\Http\Controllers\admin\ZoneController;
 use App\Http\Controllers\admin\ZonecoordController;
+
 
 Route::resource('brands', BrandController::class)->names('admin.brands');
 Route::resource('models', BrandmodelController::class)->names('admin.models');
@@ -22,3 +24,5 @@ Route::resource('zonecoords', ZonecoordController::class)->names('admin.zonecoor
 
 Route::resource('vehicletypes', VehicletypesController::class)->names('admin.vehicletypes');
 Route::resource('usertypes', UsertypesController::class)->names('admin.usertypes');
+
+Route::resource('users', UserController::class)->names('admin.users');

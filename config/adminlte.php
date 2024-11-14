@@ -361,7 +361,7 @@ return [
         ['header' => 'GESTIÓN DE PERSONAL'],
         [
             'text' => 'Personas',
-            'url' => 'admin/settings',
+            'route' => 'admin.users.index',
             'icon' => 'fas fa-users',
         ],
         [
