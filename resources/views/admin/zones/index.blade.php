@@ -36,7 +36,7 @@
     <!-- Modal -->
     <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Formulario de la zona</h5>
@@ -112,10 +112,9 @@
                 url: "{{ route('admin.zones.create') }}",
                 type: "GET",
                 success: function(response) {
-                    $("#formModal #exampleModalLabel").html("Nueva Zona");
+                    $("#formModal #exampleModalLabel").html("Registrar zona");
                     $("#formModal .modal-body").html(response);
                     $("#formModal").modal("show");
-
                     $("#formModal form").on("submit", function(e) {
                         e.preventDefault();
 
@@ -141,6 +140,23 @@
                         })
 
                     })
+
+                }
+            });
+        });
+
+
+        $(document).on('click', '.btnMap', function() {
+            var id = $(this).attr("id");
+
+            $.ajax({
+                url: "{{ route('admin.zonecoords.show', 'id') }}".replace('id', id),
+                type: "GET",
+                success: function(response) {
+                    $("#formModal #exampleModalLabel").html("Mapa de la Zona");
+                    $("#formModal .modal-body").html(response);
+                    $("#formModal").modal("show");
+
 
                 }
             });

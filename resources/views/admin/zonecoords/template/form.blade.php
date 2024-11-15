@@ -1,11 +1,23 @@
+{!! Form::text('zone_id', $zone_id)!!}
+
 <div class="form-row">
     <div class="form-group col-6">
         {!! Form::label('latitude', 'Latitud') !!}
-        {!! Form::text('latitude', null, ['class' => 'form-control', 'placeholder' => 'Latitud', 'required']) !!}
+        {!! Form::text('latitude', optional($lastCoords)->lat, [
+            'class' => 'form-control',
+            'placeholder' => 'Latitud',
+            'required',
+            'readonly',
+        ]) !!}
     </div>
     <div class="form-group col-6">
         {!! Form::label('longitude', 'Longitud') !!}
-        {!! Form::text('longitude', null, ['class' => 'form-control', 'placeholder' => 'Longitud', 'required']) !!}
+        {!! Form::text('longitude', optional($lastCoords)->lng, [
+            'class' => 'form-control',
+            'placeholder' => 'Longitud',
+            'required',
+            'readonly',
+        ]) !!}
     </div>
 </div>
 <div id="map" class="card" style="width: 100%; height:400px;"></div>
@@ -43,6 +55,19 @@
         };
 
         var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        
+        var perimeterCoords = @json($vertice);
+            // Crea un objeto de polígono con los puntos del perímetro
+            var perimeterPolygon = new google.maps.Polygon({
+                paths: perimeterCoords,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35
+            });
+
+            perimeterPolygon.setMap(map);
 
         var marker = new google.maps.Marker({
             position: {

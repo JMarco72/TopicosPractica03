@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Zonecoord;
 use Illuminate\Http\Request;
+
+use function Laravel\Prompts\select;
 
 class ZonecoordController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -28,9 +28,13 @@ class ZonecoordController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            Zonecoord::create($request->all());
+            return redirect()->route('admin.zones.show', $request->zone_id);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
-
     /**
      * Display the specified resource.
      */
@@ -44,7 +48,11 @@ class ZonecoordController extends Controller
      */
     public function edit(string $id)
     {
-        return view('admin.zonecoords.create');
+        $lastCoords = Zonecoord::select('latitude as lat', 'longitude as lng')->where('zone_id', $id)->latest()->first();
+
+        $vertice = Zonecoord::select('latitude as lat', 'longitude as lng')->where('zone_id', $id)->get();
+
+        return view('admin.zonecoords.create', compact('lastCoords','vertice'))->with('zone_id', $id);
     }
 
     /**
@@ -60,6 +68,12 @@ class ZonecoordController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $zonecoord = Zonecoord::find($id);
+            $zonecoord->delete();
+            return response()->json(['message' => 'Cordenada eliminada correctamente'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error en la eliminación: ' . $th->getMessage()], 500);
+        }
     }
 }

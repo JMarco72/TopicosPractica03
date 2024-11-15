@@ -348,7 +348,7 @@ return [
                 ],
                 [
                     'text' => 'Colores',
-                    'url' => 'admin/settings',
+                    'route' => 'admin.vehiclecolors.index',
                     'icon' => 'fas fa-palette',
                 ]
             ]
