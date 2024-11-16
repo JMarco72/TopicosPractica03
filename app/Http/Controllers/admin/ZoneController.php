@@ -40,7 +40,7 @@ class ZoneController extends Controller
                 })
                 ->addColumn('coords', function ($zone) {
                     return '<a href="' . route('admin.zones.show', $zone->id) . '" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i></a> 
-                            <button class="btn btn-danger btn-sm btnMap"><i class="fas fa-map-marker-alt"></i></button>';
+                            <button class="btn btn-danger btn-sm btnMap" id='. $zone->id .'><i class="fas fa-map-marked-alt"></i></button>';
                 })
                 ->rawColumns(['actions', 'coords'])  // Declarar columnas que contienen HTML
                 ->make(true);
