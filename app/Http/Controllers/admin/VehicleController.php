@@ -82,7 +82,8 @@ class VehicleController extends Controller
             $request->validate([
                 "name" => "unique:vehicles",
                 "code" => "unique:vehicles",
-                "plate" => "unique:vehicles"
+                "plate" => "required|string|max:12|unique:vehicles"
+                
             ]);
 
             if (!isset($request->status)) {
@@ -124,9 +125,7 @@ class VehicleController extends Controller
      */
     public function edit(string $id)
     {
-
         $vehicle = Vehicle::find($id);
-
         $brandsSQL = Brand::whereRaw("id IN (SELECT brand_id FROM brandmodels)");
         $brands = $brandsSQL->pluck("name", "id");
         $models = Brandmodel::where("brand_id", $vehicle->brand_id)->pluck("name", "id");
@@ -145,7 +144,7 @@ class VehicleController extends Controller
             $request->validate([
                 "name" => "unique:vehicles,name," . $id,
                 "code" => "unique:vehicles,code," . $id,
-                "plate" => "unique:vehicles,plate," . $id
+                "plate" => "required|string|max:12|size:12|unique:vehicles,plate," . $id
             ]);
 
             if (!isset($request->status)) {

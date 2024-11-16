@@ -55,26 +55,35 @@
 </div>
 <div class="form-row">
     <div class="form-group col-6">
-        {!! Form::label('plate', 'Placa') !!}
-        {!! Form::text('plate', null, [
+        {!! Form::label('plate', 'plate') !!}
+        {!! Form::text('plate', 'PERU ', [
             'class' => 'form-control',
-            'placeholder' => 'Placa del vehículo',
+            'placeholder' => 'placa del vehículo',
             'required',
+            'maxlength' => '12'
         ]) !!}
+        <small class="form-text text-muted">
+            El formato debe ser: <strong>PERU 123-456</strong>
+        </small>
     </div>
     <div class="form-group col-6">
         {!! Form::label('year', 'Año') !!}
-        {!! Form::number('year', null, [
-            'class' => 'form-control',
-            'placeholder' => 'Año del vehículo',
-            'required',
-        ]) !!}
-    </div>
+        {!! Form::select('year', 
+            array_combine(range(2000, date('Y')), range(2000, date('Y'))), 
+            null, [
+                'class' => 'form-control',
+                'required' => 'required',
+                'placeholder' => 'Seleccione el año del vehículo',
+            ]) !!}
+    
+    </div> 
 </div>
 <div class="form-row">
     <div class="form-group col-6">
         {!! Form::label('occupant_capacity', 'Capacidad de ocupantes') !!}
-        {!! Form::number('occupant_capacity', null, [
+        {!! Form::select('occupant_capacity', 
+        array_combine(range(1, 6), range(1, 6)), 
+        null, [
             'class' => 'form-control',
             'placeholder' => 'Capacidad de ocupantes del vehículo',
             'required',
@@ -155,4 +164,5 @@
     $('#imageButton').click(function() {
         $('#imageInput').click();
     });
+
 </script>
