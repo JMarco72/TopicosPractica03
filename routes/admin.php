@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
+use App\Http\Controllers\admin\SectorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\UsertypesController;
 use App\Http\Controllers\admin\VehiclecolorsController;
@@ -28,3 +29,4 @@ Route::resource('vehiclecolors', VehiclecolorsController::class)->names('admin.v
 Route::resource('usertypes', UsertypesController::class)->names('admin.usertypes');
 
 Route::resource('users', UserController::class)->names('admin.users');
+Route::resource('sectors', SectorController::class)->names('admin.sectors');
