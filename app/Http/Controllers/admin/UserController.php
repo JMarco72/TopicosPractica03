@@ -73,7 +73,7 @@ class UserController extends Controller
             'dni' => 'required|string|max:8|unique:users,dni',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'license' => 'nullable|string|max:50',
+            'license' => 'nullable|string|regex:/^([A-Z]{1,2}-?[0-9]{8})$/|max:10',
             'usertype_id' => 'required|exists:usertypes,id',
             'password' => 'required|string|min:8|confirmed',
         ]);

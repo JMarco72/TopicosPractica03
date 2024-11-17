@@ -3,26 +3,34 @@ version: '3'
 services:
   app:
     build:
-      context: . # Construye la imagen desde el Dockerfile en el directorio actual.
+      context: .
       dockerfile: Dockerfile
-    image: proyecto-reciclaje # Nombre de la imagen local construida.
+    image: josueCumpa/proyecto-reciclaje
     ports:
-      - "8080:80" # Mapea el puerto 8080 del host al puerto 80 del contenedor.
+      - "8081:80" # Mapea el puerto 80 del contenedor al 8081 del host
     depends_on:
-      - db # Depende del servicio de base de datos.
+      - db
     environment:
+      APP_ENV: local
+      APP_DEBUG: 1
+      APP_KEY: base64:GENERATED_KEY_HERE
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
       DB_DATABASE: proyectoGrupal
       DB_USERNAME: root
-      DB_PASSWORD: ""
-    command: sh -c "dockerize -wait tcp://db:3306 -timeout 60m php artisan migrate"
+      DB_PASSWORD: root
+    volumes:
+      - .:/var/www/html
+    command: sh -c "while ! nc -z db 3306; do sleep 1; done && php artisan migrate && php artisan serve --host=0.0.0.0 --port=80"
 
   db:
-    image: mysql:8.0 # Especifica la versión de MySQL.
+    image: mysql:8.0
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: proyectoGrupal
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+    tmpfs: # Define un volumen temporal en memoria
+      - /var/lib/mysql
     ports:
-      - "3306:3306" # Expone el puerto de MySQL para conectarse desde el host.
+      - "3306:3306"
