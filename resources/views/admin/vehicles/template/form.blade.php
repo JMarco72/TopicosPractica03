@@ -55,7 +55,7 @@
 </div>
 <div class="form-row">
     <div class="form-group col-6">
-        {!! Form::label('plate', 'plate') !!}
+        {!! Form::label('plate', 'Placa') !!}
         {!! Form::text('plate', 'PERU ', [
             'class' => 'form-control',
             'placeholder' => 'placa del vehículo',
