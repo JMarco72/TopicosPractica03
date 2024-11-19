@@ -14,16 +14,6 @@ class VehiclecolorSeeder extends Seeder
     public function run(): void
     {
 
-        // $c1 = new Vehiclecolor();
-        // $c1->name = 'Blanco';
-        // $c1->save();
 
-        // $c2 = new Vehiclecolor();
-        // $c2->name = 'Rojo';
-        // $c2->save();
-
-        // $c3 = new Vehiclecolor();
-        // $c3->name = 'Negro';
-        // $c3->save();
     }
 }
