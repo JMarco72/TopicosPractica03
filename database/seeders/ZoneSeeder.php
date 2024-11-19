@@ -14,7 +14,7 @@ class ZoneSeeder extends Seeder
     public function run(): void
     {
         DB::unprepared('
-        CREATE PROCEDURE `recicla_usat`.`sp_zones`(
+        CREATE PROCEDURE `proyectoGrupal`.`sp_zones`(
             IN _operacion INT,
             IN _id BIGINT
         )

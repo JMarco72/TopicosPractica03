@@ -15,7 +15,7 @@ class VehicleSeeder extends Seeder
     {
         // Crea el procedimiento almacenado
         DB::unprepared('
-            CREATE PROCEDURE `recicla_usat`.`sp_vehicles`()
+            CREATE PROCEDURE `proyectoGrupal`.`sp_vehicles`()
             BEGIN
                 SELECT 
                     v.id, 
