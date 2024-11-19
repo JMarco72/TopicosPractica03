@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: josueCumpa/proyecto-reciclaje
+    image: josuecumpa/proyecto-reciclaje:latest
     ports:
       - "8081:80" # Mapea el puerto 80 del contenedor al 8081 del host
     depends_on:
