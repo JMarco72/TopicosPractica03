@@ -12,7 +12,7 @@ class RouteController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.routes.index');
     }
 
     /**
