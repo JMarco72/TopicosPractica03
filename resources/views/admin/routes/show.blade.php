@@ -1,11 +1,10 @@
-<div id="map" class="card" style="width: 100%; height:400px;"></div>
+<div id="map" class="card" style="width: 100%; height: 500px;"></div>
 
 <script>
     // Datos de las rutas (puntos de inicio y fin)
     var routes = @json($points);
 
     function initMap() {
-        
         // Configuración inicial del mapa
         var mapOptions = {
             center: { lat: 0, lng: 0 }, // Centro temporal
@@ -31,17 +30,29 @@
                     map: map
                 });
 
-                // Agregar marcadores de inicio y fin
+                // Iconos personalizados para los marcadores
+                var startIcon = {
+                    url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png" // Ícono verde
+                };
+
+                var endIcon = {
+                    url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png" // Ícono rojo
+                };
+
+                // Agregar marcador para el punto de inicio
                 new google.maps.Marker({
                     position: startPoint,
                     map: map,
-                    title: 'Inicio: ' + route.name
+                    title: 'Inicio: ' + route.name,
+                    icon: startIcon
                 });
 
+                // Agregar marcador para el punto final
                 new google.maps.Marker({
                     position: endPoint,
                     map: map,
-                    title: 'Fin: ' + route.name
+                    title: 'Fin: ' + route.name,
+                    icon: endIcon
                 });
 
                 // Ajustar los límites del mapa
