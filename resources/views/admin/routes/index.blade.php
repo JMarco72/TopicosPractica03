@@ -18,8 +18,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>NOMBRE</th>
                         <th>INICIO</th>
                         <th>FIN</th>
+                        <th>ESTADO</th>
+                        <th>MAPA</th>
                         <th width="10"></th>
                     </tr>
                 </thead>
@@ -57,15 +60,30 @@
     <script>
         $(document).ready(function() {
             var table = $('#datatable').DataTable({
-                "ajax": "{{ route('admin.models.index') }}", // La ruta que llama al controlador vía AJAX
+                "ajax": "{{ route('admin.routes.index') }}", // La ruta que llama al controlador vía AJAX
                 "columns": [{
                         "data": "id",
                     },
                     {
-                        "data": "name",
+                        "data": "nombre",
                     },
                     {
-                        "data": "bname",
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return `GPS  (${row.latitude_start}, ${row.longitude_start})`;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return `GPS  (${row.latitude_end}, ${row.longitude_end})`;
+                        }
+                    },
+                    {
+                        "data": "status",
+                    },
+                    {
+                        "data": "gps",
                     },
                     {
                         "data": "actions",
@@ -126,6 +144,22 @@
                         })
 
                     })
+
+                }
+            });
+        });
+
+        $(document).on('click', '.btnMap', function() {
+            var id = $(this).attr("id");
+
+            $.ajax({
+                url: "{{ route('admin.routes.show', 'id') }}".replace('id', id),
+                type: "GET",
+                success: function(response) {
+                    $("#formModal #exampleModalLabel").html("Mapa del sector");
+                    $("#formModal .modal-body").html(response);
+                    $("#formModal").modal("show");
+
 
                 }
             });
