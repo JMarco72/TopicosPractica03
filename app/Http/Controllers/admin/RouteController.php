@@ -19,11 +19,7 @@ class RouteController extends Controller
         $routes = DB::select("
         SELECT 
             r.id, 
-            r.name as nombre, 
-            r.latitude_start, 
-            r.longitude_start, 
-            r.latitude_end, 
-            r.longitude_end,
+            r.name as nombre,
             r.status 
         FROM routes r
         ");
@@ -53,7 +49,10 @@ class RouteController extends Controller
                 ->addColumn('gps', function ($routes) {
                     return '<button class="btn btn-danger btn-sm btnMap" id=' . $routes->id . '><i class="fas fa-map-marked-alt"></i></button>';
                 })
-                ->rawColumns(['actions', 'status', 'gps'])  // Declarar columnas que contienen HTML
+                ->addColumn('asignar', function ($routes) {
+                    return '<button class="btn btn-primary btn-sm btnAsig" id=' . $routes->id . '><i class="fas fa-plus-circle"></i></button>';
+                })
+                ->rawColumns(['actions', 'status', 'gps', 'asignar'])  // Declarar columnas que contienen HTML
                 ->make(true);
         } else {
             return view('admin.routes.index');
@@ -196,5 +195,4 @@ class RouteController extends Controller
             return response()->json(['message' => 'Error la eliminación: ' . $th->getMessage()], 500);
         }
     }
-
 }

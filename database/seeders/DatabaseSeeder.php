@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // $this->call(VehiclecolorSeeder::class);
         $this->call(VehicletypeSeeder::class); // no eliminamos este seeder porque ahi datos de prioridad en el sistema
 
         $this->call(DepartmentSeeder::class);

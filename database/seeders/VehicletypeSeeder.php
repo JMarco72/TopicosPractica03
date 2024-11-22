@@ -13,16 +13,16 @@ class VehicletypeSeeder extends Seeder
      */
     public function run(): void
     {
-        // $t1 = new Vehicletype();
-        // $t1->name = 'Carga lateral';
-        // $t1->save();
+        $t1 = new Vehicletype();
+        $t1->name = 'Carga lateral';
+        $t1->save();
 
-        // $t2 = new Vehicletype();
-        // $t2->name = 'Carga trasera';
-        // $t2->save();
+        $t2 = new Vehicletype();
+        $t2->name = 'Carga trasera';
+        $t2->save();
 
-        // $t3 = new Vehicletype();
-        // $t3->name = 'Carga trasera con grúa';
-        // $t3->save();
+        $t3 = new Vehicletype();
+        $t3->name = 'Carga trasera con grúa';
+        $t3->save();
     }
 }

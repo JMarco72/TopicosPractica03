@@ -19,10 +19,9 @@
                     <tr>
                         <th>ID</th>
                         <th>NOMBRE</th>
-                        <th>INICIO</th>
-                        <th>FIN</th>
                         <th>ESTADO</th>
                         <th>MAPA</th>
+                        <th>ASIGNAR</th>
                         <th width="10"></th>
                     </tr>
                 </thead>
@@ -86,22 +85,13 @@
                         "data": "nombre",
                     },
                     {
-                        "data": null,
-                        "render": function(data, type, row) {
-                            return `GPS  (${row.latitude_start}, ${row.longitude_start})`;
-                        }
-                    },
-                    {
-                        "data": null,
-                        "render": function(data, type, row) {
-                            return `GPS  (${row.latitude_end}, ${row.longitude_end})`;
-                        }
-                    },
-                    {
                         "data": "status",
                     },
                     {
                         "data": "gps",
+                    },
+                    {
+                        "data": "asignar",
                     },
                     {
                         "data": "actions",
@@ -180,6 +170,21 @@
                 }
             });
         });
+
+        $(document).on('click', '.btnAsig', function() {
+            var id = $(this).attr("id");
+
+            $.ajax({
+                url: "{{ route('admin.routes.show', 'id') }}".replace('id', id),
+                type: "GET",
+                success: function(response) {
+                    $("#modalMap #modalMapLabel").html("Asignar de la zona");
+                    $("#modalMap .modal-body").html(response);
+                    $("#modalMap").modal("show");
+                }
+            });
+        });
+
 
 
         $(document).on('click', '.btnEditar', function() {
