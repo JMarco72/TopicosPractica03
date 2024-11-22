@@ -7,12 +7,13 @@
             'placeholder' => 'Ingrese el nombre de la ruta',
             'required',
         ]) !!}
+        <small class="form-text text-muted">Ejemplo: Ruta A, Ruta B.</small>
     </div>
 </div>
 
 <div class="form-row">
-    <div class="form-group col-6">
-        {!! Form::label('latitude_start', 'Latitud Inicio') !!}
+    <div class="form-group col-3">
+        {!! Form::label('latitude_start', 'Coordenadas Inicio') !!}
         {!! Form::text('latitude_start', null, [
             'class' => 'form-control',
             'placeholder' => 'Latitud Inicio',
@@ -20,8 +21,8 @@
             'readonly',
         ]) !!}
     </div>
-    <div class="form-group col-6">
-        {!! Form::label('longitude_start', 'Longitud Inicio') !!}
+    <div class="form-group col-3">
+        {!! Form::label('longitude_start', '&nbsp;') !!}
         {!! Form::text('longitude_start', null, [
             'class' => 'form-control',
             'placeholder' => 'Longitud Inicio',
@@ -29,11 +30,9 @@
             'readonly',
         ]) !!}
     </div>
-</div>
 
-<div class="form-row">
-    <div class="form-group col-6">
-        {!! Form::label('latitude_end', 'Latitud Fin') !!}
+    <div class="form-group col-3">
+        {!! Form::label('latitude_end', 'Coordenadas Fin') !!}
         {!! Form::text('latitude_end', null, [
             'class' => 'form-control',
             'placeholder' => 'Latitud Fin',
@@ -41,8 +40,8 @@
             'readonly',
         ]) !!}
     </div>
-    <div class="form-group col-6">
-        {!! Form::label('longitude_end', 'Longitud Fin') !!}
+    <div class="form-group col-3">
+        {!! Form::label('longitude_end', '&nbsp;') !!}
         {!! Form::text('longitude_end', null, [
             'class' => 'form-control',
             'placeholder' => 'Longitud Fin',
