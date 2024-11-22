@@ -130,13 +130,20 @@ class VehicleController extends Controller
      */
     public function edit(string $id)
     {
-        $vehicle = Vehicle::find($id);
-        $brandsSQL = Brand::whereRaw("id IN (SELECT brand_id FROM brandmodels)");
-        $brands = $brandsSQL->pluck("name", "id");
-        $models = Brandmodel::where("brand_id", $vehicle->brand_id)->pluck("name", "id");
-        $types = Vehicletype::pluck("name", "id");
-        $colors = Vehiclecolor::pluck("name", "id");
-        return view("admin.vehicles.edit", compact("brands", "models", "types", "colors", "vehicle"));
+       
+    $vehicle = Vehicle::findOrFail($id); // Encuentra el vehículo
+    $brands = Brand::pluck('name', 'id'); // Marcas
+    $models = Brandmodel::where('brand_id', $vehicle->brand_id)->pluck('name', 'id'); // Modelos según la marca
+    $types = Vehicletype::pluck('name', 'id'); // Tipos de vehículo
+    $colors = Vehiclecolor::all()->mapWithKeys(function ($color) {
+        return [$color->id => [
+            'name' => $color->name,
+            'rgb' => "rgb({$color->red},{$color->green},{$color->blue})"
+        ]];
+    });
+
+    return view('admin.vehicles.edit', compact('vehicle', 'brands', 'models', 'types', 'colors'));
+    
     }
 
     /**
@@ -145,37 +152,34 @@ class VehicleController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-
             $request->validate([
                 "name" => "unique:vehicles,name," . $id,
                 "code" => "unique:vehicles,code," . $id,
-                "plate" => "required|string|max:12|size:12|unique:vehicles,plate," . $id
+                "plate" => "required|string|max:12|size:12|unique:vehicles,plate," . $id,
+                "color_id" => "required|exists:vehiclecolors,id" // Validar que el color existe
             ]);
-
-            if (!isset($request->status)) {
-                $status = 0;
-            } else {
-                $status = 1;
-            }
-
-            $vehicle = Vehicle::find($id);
-
+    
+            $status = $request->has('status') ? 1 : 0;
+    
+            $vehicle = Vehicle::findOrFail($id);
+    
             $vehicle->update($request->except("image") + ["status" => $status]);
-
-            if ($request->image != "") {
+    
+            if ($request->hasFile('image')) {
                 $image = $request->file("image")->store("public/vehicles_images/" . $vehicle->id);
                 $urlImage = Storage::url($image);
-                DB::select("UPDATE vehicleimages SET profile=0 WHERE vehicle_id=$id");
+    
+                // Actualizar imagen de perfil
+                DB::table("vehicleimages")->where("vehicle_id", $id)->update(["profile" => 0]);
                 Vehicleimage::create([
                     "image" => $urlImage,
                     "profile" => 1,
                     "vehicle_id" => $vehicle->id
                 ]);
             }
-
+    
             return response()->json(['message' => 'Vehículo actualizado correctamente'], 200);
         } catch (\Throwable $th) {
-
             return response()->json(['message' => 'Error en la actualización: ' . $th->getMessage()], 500);
         }
     }
