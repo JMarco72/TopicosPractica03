@@ -14,40 +14,25 @@ class VehiclecolorsController extends Controller
      */
     public function index(Request $request)
     {
-        // Usamos Eloquent para obtener los datos del modelo `VehicleColor`
-        $vehiclecolors = Vehiclecolor::select('id', 'name', 'red', 'green', 'blue', 'description')->get();
-
         if ($request->ajax()) {
-            return DataTables::of($vehiclecolors)
-                ->addColumn('color_code', function ($color) {
-                    // Genera el código RGB en formato "rgb(r, g, b)"
-                    return 'rgb(' . $color->red . ', ' . $color->green . ', ' . $color->blue . ')';
+            $colors = Vehiclecolor::all();
+            return DataTables::of($colors)
+                ->addColumn('edit', function ($row) {
+                    return '<button class="btn btn-primary btnEditar" id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
                 })
-                ->addColumn('actions', function ($color) {
-                    // Genera el código HTML para los botones de acción directamente
-                    return '
-                        <div class="dropdown">
-                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton-' . $color->id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bars"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-' . $color->id . '">
-                                <button class="dropdown-item btnEditar" id="' . $color->id . '">
-                                    <i class="fas fa-edit"></i> Editar
-                                </button>
-                                <form action="' . route('admin.vehiclecolors.destroy', $color->id) . '" method="POST" class="frmEliminar" style="display:inline;">
-                                    ' . csrf_field() . method_field('DELETE') . '
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-trash"></i> Eliminar
-                                    </button>
-                                </form>
-                            </div>
-                        </div>';
+                ->addColumn('delete', function ($row) {
+                    return '<form action="' . route('admin.vehiclecolors.destroy', $row->id) . '" method="POST" class="fmrEliminar">
+                                ' . csrf_field() . '
+                                ' . method_field('DELETE') . '
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                            </form>';
                 })
-                ->rawColumns(['color_code', 'actions'])
+                ->rawColumns(['edit', 'delete'])
                 ->make(true);
         }
-
+    
         return view('admin.vehiclecolors.index');
+
     }
 
 
@@ -101,8 +86,12 @@ class VehiclecolorsController extends Controller
      */
     public function edit(string $id)
     {
-        $vehiclecolors = Vehiclecolor::find($id);
-        return view('admin.vehiclecolors.edit', compact('vehiclecolors'));
+        $vehiclecolor = Vehiclecolor::findOrFail($id);
+
+        // Convertir valores RGB a formato HEX para el input de color
+        $vehiclecolor->color_code = sprintf("#%02x%02x%02x", $vehiclecolor->red, $vehiclecolor->green, $vehiclecolor->blue);
+    
+        return view('admin.vehiclecolors.edit', compact('vehiclecolor'));
     }
 
 
@@ -111,26 +100,26 @@ class VehiclecolorsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validación de los datos de entrada
         $request->validate([
             'name' => 'required|string|max:100',
-            'red' => 'required|integer|between:0,255',   // Validación para el valor de rojo
-            'green' => 'required|integer|between:0,255', // Validación para el valor de verde
-            'blue' => 'required|integer|between:0,255',  // Validación para el valor de azul
+            'red' => 'required|integer|between:0,255',
+            'green' => 'required|integer|between:0,255',
+            'blue' => 'required|integer|between:0,255',
             'description' => 'nullable|string|max:255',
         ]);
-
+    
         try {
-            $vehiclecolors = Vehiclecolor::findOrFail($id); // Utiliza findOrFail para manejar el caso de no encontrar el registro
-
-            $vehiclecolors->update([
+            $vehiclecolor = Vehiclecolor::findOrFail($id);
+    
+            // Actualizar únicamente los campos necesarios
+            $vehiclecolor->update([
                 'name' => $request->name,
                 'red' => $request->red,
                 'green' => $request->green,
                 'blue' => $request->blue,
                 'description' => $request->description,
             ]);
-
+    
             return response()->json(['message' => 'Color actualizado correctamente'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Error al actualizar: ' . $th->getMessage()], 500);
