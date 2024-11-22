@@ -68,7 +68,12 @@ class VehicleController extends Controller
         $brands = $brandsSQL->pluck("name", "id");
         $models = Brandmodel::where("brand_id", $brandsSQL->first()->id)->pluck("name", "id");
         $types = Vehicletype::pluck("name", "id");
-        $colors = Vehiclecolor::pluck("name", "id");
+        $colors = Vehiclecolor::all()->mapWithKeys(function ($color) {
+            return [$color->id => [
+                'name' => $color->name,
+                'rgb' => "rgb({$color->red},{$color->green},{$color->blue})"
+            ]];
+        });
         return view("admin.vehicles.create", compact("brands", "models", "types", "colors"));
     }
 

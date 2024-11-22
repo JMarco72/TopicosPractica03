@@ -44,14 +44,25 @@
             'required',
         ]) !!}
     </div>
-    <div class="form-group col-6">
-        {!! Form::label('color_id', 'Color') !!}
-        {!! Form::select('color_id', $colors, null, [
-            'class' => 'form-control',
-            'id' => 'color_id',
-            'required',
-        ]) !!}
+    <div class="form-group col-6 d-flex align-items-center">
+    {!! Form::label('color_id', 'Color', ['class' => 'mr-2']) !!}
+    <div class="d-flex align-items-center w-100">
+        <select name="color_id" id="color_id" class="form-control" required>
+            <option value="" disabled selected>Seleccione un color</option>
+            @foreach ($colors as $id => $color)
+                <option value="{{ $id }}" data-rgb="{{ $color['rgb'] }}">{{ $color['name'] }}</option>
+            @endforeach
+        </select>
+        <div id="colorPreview" style="
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            background-color: #ffffff; /* Color inicial blanco */
+        "></div>
     </div>
+</div>
 </div>
 <div class="form-row">
     <div class="form-group col-6">
@@ -164,5 +175,12 @@
     $('#imageButton').click(function() {
         $('#imageInput').click();
     });
+
+    $('#color_id').change(function () {
+    var selectedOption = $(this).find(':selected'); // Captura la opción seleccionada
+    var colorRgb = selectedOption.data('rgb'); // Obtén el valor RGB
+    $('#colorPreview').css('background-color', colorRgb); // Cambia el color del círculo
+});
+
 
 </script>
