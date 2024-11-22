@@ -50,7 +50,10 @@ class RouteController extends Controller
                     return '<button class="btn btn-danger btn-sm btnMap" id=' . $routes->id . '><i class="fas fa-map-marked-alt"></i></button>';
                 })
                 ->addColumn('asignar', function ($routes) {
-                    return '<button class="btn btn-primary btn-sm btnAsig" id=' . $routes->id . '><i class="fas fa-plus-circle"></i></button>';
+                    $url = route('admin.routezone.show', $routes->id);
+                    return '<a href="' . $url . '" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus-circle"></i>
+                            </a>';
                 })
                 ->rawColumns(['actions', 'status', 'gps', 'asignar'])  // Declarar columnas que contienen HTML
                 ->make(true);

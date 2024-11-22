@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
 use App\Http\Controllers\admin\RouteController;
+use App\Http\Controllers\admin\RoutezoneController;
 use App\Http\Controllers\admin\SectorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\UsertypesController;
@@ -33,3 +34,4 @@ Route::resource('users', UserController::class)->names('admin.users');
 Route::resource('sectors', SectorController::class)->names('admin.sectors');
 
 Route::resource('routes', RouteController::class)->names('admin.routes');
+Route::resource('routezone', RoutezoneController::class)->names('admin.routezone');
