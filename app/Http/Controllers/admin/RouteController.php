@@ -47,15 +47,9 @@ class RouteController extends Controller
                     return $routes->status == 1 ? '<div style="color: green"><i class="fas fa-check"></i> Activo</div>' : '<div style="color: red"><i class="fas fa-times"></i> Inactivo</div>';
                 })
                 ->addColumn('gps', function ($routes) {
-                    return '<button class="btn btn-danger btn-sm btnMap" id=' . $routes->id . '><i class="fas fa-map-marked-alt"></i></button>';
+                    return '<a href="' . route('admin.routes.show', $routes->id) . '" class="btn btn-danger btn-sm"><i class="fas fa-map-marked-alt"></i></a> ';
                 })
-                ->addColumn('asignar', function ($routes) {
-                    $url = route('admin.routezone.show', $routes->id);
-                    return '<a href="' . $url . '" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus-circle"></i>
-                            </a>';
-                })
-                ->rawColumns(['actions', 'status', 'gps', 'asignar'])  // Declarar columnas que contienen HTML
+                ->rawColumns(['actions', 'status', 'gps'])  // Declarar columnas que contienen HTML
                 ->make(true);
         } else {
             return view('admin.routes.index');
@@ -103,39 +97,54 @@ class RouteController extends Controller
      */
     public function show(string $id)
     {
-        // Obtener las rutas de la base de datos
+        // Obtener la ruta principal desde la base de datos
         $routes = DB::select("
             SELECT 
                 r.id, 
-                r.name as nombre, 
-                r.latitude_start as lat_start, 
-                r.longitude_start as lng_start, 
-                r.latitude_end as lat_end, 
-                r.longitude_end as lng_end,
+                r.name AS nombre, 
+                r.latitude_start AS lat_start, 
+                r.longitude_start AS lng_start, 
+                r.latitude_end AS lat_end, 
+                r.longitude_end AS lng_end, 
                 r.status 
             FROM routes r
             WHERE r.id = ?
         ", [$id]);
 
-        // Mapear las rutas a un formato de inicio y fin
-        $points = collect($routes)->map(function ($route) {
-            return [
-                'id' => $route->id,
-                'name' => $route->nombre,
-                'start' => [
-                    'lat' => $route->lat_start,
-                    'lng' => $route->lng_start,
-                ],
-                'end' => [
-                    'lat' => $route->lat_end,
-                    'lng' => $route->lng_end,
-                ],
-            ];
-        });
+        // Verificar si se encontró la ruta
+        if (empty($routes)) {
+            abort(404, 'Ruta no encontrada');
+        }
 
-        // Pasar los puntos a la vista
-        return view('admin.routes.show', compact('points'));
+        // Mapear la ruta
+        $route = [
+            'id' => $routes[0]->id,
+            'name' => $routes[0]->nombre,
+            'lat_start' => $routes[0]->lat_start,
+            'lng_start' => $routes[0]->lng_start,
+            'lat_end' => $routes[0]->lat_end,
+            'lng_end' => $routes[0]->lng_end,
+        ];
+
+        // Obtener las zonas relacionadas con la ruta
+        $routezones = DB::select("
+            SELECT 
+                z.id AS zone_id,
+                z.name AS zona, 
+                z.area AS area 
+            FROM routezones r2
+            INNER JOIN zones z ON z.id = r2.zone_id
+            WHERE r2.route_id = ?
+        ", [$id]);
+
+        // Pasar los datos a la vista
+        return view('admin.routes.show', [
+            'route' => $route,          // Información principal de la ruta
+            'routezones' => $routezones // Zonas relacionadas
+        ]);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

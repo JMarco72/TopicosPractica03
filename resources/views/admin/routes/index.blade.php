@@ -2,10 +2,6 @@
 
 @section('title', 'ReciclaUSAT')
 
-{{-- @section('content_header')
-  <h1>Marcas</h1>
-@stop --}}
-
 @section('content')
     <div class="p-2"></div>
     <div class="card">
@@ -20,8 +16,7 @@
                         <th>ID</th>
                         <th>NOMBRE</th>
                         <th>ESTADO</th>
-                        <th>MAPA</th>
-                        <th>ASIGNAR</th>
+                        <th></th>
                         <th width="10"></th>
                     </tr>
                 </thead>
@@ -35,7 +30,7 @@
     <!-- Modal -->
     <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Formulario de la ruta</h5>
@@ -51,22 +46,6 @@
     </div>
 
 
-    <!-- Modal para el mapa -->
-    <div class="modal fade" id="modalMap" tabindex="-1" role="dialog" aria-labelledby="modalMapLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalMapLabel">Mapa de la Ruta</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Contenido dinámico del mapa -->
-                </div>
-            </div>
-        </div>
-    </div>
 @stop
 
 @section('css')
@@ -89,9 +68,6 @@
                     },
                     {
                         "data": "gps",
-                    },
-                    {
-                        "data": "asignar",
                     },
                     {
                         "data": "actions",
@@ -164,21 +140,7 @@
                 url: "{{ route('admin.routes.show', 'id') }}".replace('id', id),
                 type: "GET",
                 success: function(response) {
-                    $("#modalMap #modalMapLabel").html("Mapa de la Ruta");
-                    $("#modalMap .modal-body").html(response);
-                    $("#modalMap").modal("show");
-                }
-            });
-        });
-
-        $(document).on('click', '.btnAsig', function() {
-            var id = $(this).attr("id");
-
-            $.ajax({
-                url: "{{ route('admin.routes.show', 'id') }}".replace('id', id),
-                type: "GET",
-                success: function(response) {
-                    $("#modalMap #modalMapLabel").html("Asignar de la zona");
+                    $("#modalMap #modalMapLabel").html("Asignar zona en ruta");
                     $("#modalMap .modal-body").html(response);
                     $("#modalMap").modal("show");
                 }

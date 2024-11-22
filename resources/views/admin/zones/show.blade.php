@@ -73,17 +73,7 @@
 
 @section('js')
     <script>
-        // $("#btnNuevo").click(function() {
-        //     var id = $(this).attr('data-id');
-        //     $.ajax({
-        //         url: "{{ route('admin.zonecoords.edit', '_id') }}".replace('_id', id),
-        //         type: "GET",
-        //         success: function(response) {
-        //             $("#formModal .modal-body").html(response);
-        //             $("#formModal").modal("show");
-        //         }
-        //     })
-        // })
+
 
         $(document).ready(function() {
             var table = $('#datatable').DataTable({

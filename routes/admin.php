@@ -34,4 +34,4 @@ Route::resource('users', UserController::class)->names('admin.users');
 Route::resource('sectors', SectorController::class)->names('admin.sectors');
 
 Route::resource('routes', RouteController::class)->names('admin.routes');
-Route::resource('routezone', RoutezoneController::class)->names('admin.routezone');
+Route::resource('routezones', RoutezoneController::class)->names('admin.routezones');

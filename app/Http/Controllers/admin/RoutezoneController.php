@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Route;
 use App\Models\Routezone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoutezoneController extends Controller
 {
@@ -22,7 +23,9 @@ class RoutezoneController extends Controller
      */
     public function create()
     {
-        //
+        $zones = DB::table('zones')->pluck('name', 'id'); // Cargar id como clave y nombre como valor
+    
+        return view('admin.routezones.create', compact('zones'));
     }
 
     /**
