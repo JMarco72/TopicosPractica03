@@ -44,35 +44,39 @@
             'required',
         ]) !!}
     </div>
-    <div class="form-group col-6 d-flex align-items-center">
-    {!! Form::label('color_id', 'Color', ['class' => 'mr-2']) !!}
-    <div class="d-flex align-items-center w-100">
+    <div class="form-group col-6">
+    {!! Form::label('color_id', 'Color') !!}
+    <div class="d-flex align-items-center">
         <select name="color_id" id="color_id" class="form-control" required>
             <option value="" disabled selected>Seleccione un color</option>
             @foreach ($colors as $id => $color)
-                <option value="{{ $id }}" data-rgb="{{ $color['rgb'] }}">{{ $color['name'] }}</option>
+                <option value="{{ $id }}" data-rgb="{{ $color['rgb'] }}" 
+                    {{ isset($vehicle) && $vehicle->color_id == $id ? 'selected' : '' }}>
+                    {{ $color['name'] }}
+                </option>
             @endforeach
         </select>
         <div id="colorPreview" style="
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            border: 1px solid #ccc;
-            margin-left: 10px;
-            background-color: #ffffff; /* Color inicial blanco */
+            border: 2px solid #ddd; /* Borde suave */
+            margin-left: 10px; /* Espaciado entre el select y el círculo */
+            background-color: {{ isset($vehicle) && isset($colors[$vehicle->color_id]) ? $colors[$vehicle->color_id]['rgb'] : '#ffffff' }};
         "></div>
     </div>
 </div>
 </div>
+
 <div class="form-row">
     <div class="form-group col-6">
         {!! Form::label('plate', 'Placa') !!}
-        {!! Form::text('plate', 'PERU ', [
-            'class' => 'form-control',
-            'placeholder' => 'placa del vehículo',
-            'required',
-            'maxlength' => '12'
-        ]) !!}
+        {!! Form::text('plate', isset($vehicle) ? $vehicle->plate : 'PERU ', [
+    'class' => 'form-control',
+    'placeholder' => 'placa del vehículo',
+    'required',
+    'maxlength' => '12'
+]) !!}
         <small class="form-text text-muted">
             El formato debe ser: <strong>PERU 123-456</strong>
         </small>
@@ -176,10 +180,22 @@
         $('#imageInput').click();
     });
 
-    $('#color_id').change(function () {
-    var selectedOption = $(this).find(':selected'); // Captura la opción seleccionada
+    $(document).ready(function () {
+    // Inicializar la vista previa del color al cargar (solo para editar)
+    var selectedOption = $('#color_id').find(':selected'); // Captura la opción seleccionada
     var colorRgb = selectedOption.data('rgb'); // Obtén el valor RGB
-    $('#colorPreview').css('background-color', colorRgb); // Cambia el color del círculo
+    if (colorRgb) {
+        $('#colorPreview').css('background-color', colorRgb); // Cambia el color del círculo
+    } else {
+        $('#colorPreview').css('background-color', '#ffffff'); // Blanco por defecto si no hay selección
+    }
+
+    // Cambiar la vista previa al seleccionar un nuevo color
+    $('#color_id').change(function () {
+        var selectedOption = $(this).find(':selected'); // Captura la opción seleccionada
+        var colorRgb = selectedOption.data('rgb'); // Obtén el valor RGB
+        $('#colorPreview').css('background-color', colorRgb); // Cambia el color del círculo
+    });
 });
 
 
