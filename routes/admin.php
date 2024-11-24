@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
+use App\Http\Controllers\admin\ProgrammingsController;
 use App\Http\Controllers\admin\RouteController;
 use App\Http\Controllers\admin\RoutezoneController;
 use App\Http\Controllers\admin\SectorController;
@@ -15,7 +16,6 @@ use App\Http\Controllers\admin\VehicleimagesController;
 use App\Http\Controllers\admin\VehicletypesController;
 use App\Http\Controllers\admin\ZoneController;
 use App\Http\Controllers\admin\ZonecoordController;
-use App\Models\Vehiclecolor;
 
 Route::resource('brands', BrandController::class)->names('admin.brands');
 Route::resource('models', BrandmodelController::class)->names('admin.models');
@@ -35,3 +35,5 @@ Route::resource('sectors', SectorController::class)->names('admin.sectors');
 
 Route::resource('routes', RouteController::class)->names('admin.routes');
 Route::resource('routezones', RoutezoneController::class)->names('admin.routezones');
+Route::resource('programming', ProgrammingsController::class)->names('admin.programming');
+Route::get('searchprogramming', [ProgrammingsController::class, 'searchprogramming'])->name('admin.searchprogramming');

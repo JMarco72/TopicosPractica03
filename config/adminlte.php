@@ -401,7 +401,7 @@ return [
                 ],
                 [
                     'text' => 'Programación de Rutas',
-                    'route' => 'admin.models.index',
+                    'route' => 'admin.programming.index',
                     'icon' => 'fas fa-calendar-alt',
                 ],
             ]
