@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Sector;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,12 +20,17 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $this->call(VehiclecolorSeeder::class);
-        $this->call(VehicletypeSeeder::class);
-
+        $this->call(VehicletypeSeeder::class); // no eliminamos este seeder porque ahi datos de prioridad en el sistema
+        $this->call(RouteStatusSeeder::class);
         $this->call(DepartmentSeeder::class);
         $this->call(ProvinceSeeder::class);
         $this->call(DistrictSeeder::class);
         $this->call(SectorSeeder::class);
+
+        $this->call(UsertypesSeeder::class);
+        $this->call(UserSeeder::class);
+
+        $this->call(VehicleSeeder::class);              // crear el procedure: sp_vehicles()
+        $this->call(ZoneSeeder::class);              // crear el procedure: sp_zones()
     }
 }

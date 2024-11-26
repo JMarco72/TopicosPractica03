@@ -348,7 +348,7 @@ return [
                 ],
                 [
                     'text' => 'Colores',
-                    'url' => 'admin/settings',
+                    'route' => 'admin.vehiclecolors.index',
                     'icon' => 'fas fa-palette',
                 ]
             ]
@@ -361,18 +361,18 @@ return [
         ['header' => 'GESTIÓN DE PERSONAL'],
         [
             'text' => 'Personas',
-            'url' => 'admin/settings',
+            'route' => 'admin.users.index',
             'icon' => 'fas fa-users',
         ],
         [
             'text' => 'Tipos',
-            'url' => 'admin/settings',
+            'route' => 'admin.usertypes.index',
             'icon' => 'fas fa-user-tag',
         ],
         ['header' => 'GESTIÓN DE RUTAS'],
         [
             'text' => 'Sectores',
-            'url' => 'admin/settings',
+            'route' => 'admin.sectors.index',
             'icon' => 'fas fa-layer-group',
         ],
         [
@@ -382,7 +382,7 @@ return [
         ],
         [
             'text' => 'Rutas',
-            'url' => 'admin/settings',
+            'route' => 'admin.routes.index',
             'icon' => 'fas fa-route',
         ],
         /*[
@@ -401,7 +401,7 @@ return [
                 ],
                 [
                     'text' => 'Programación de Rutas',
-                    'route' => 'admin.models.index',
+                    'route' => 'admin.programming.index',
                     'icon' => 'fas fa-calendar-alt',
                 ],
             ]

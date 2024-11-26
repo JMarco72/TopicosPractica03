@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("name", 100);
             $table->string("code", 100)->nullable();
-            $table->string("plate", 10);
+            $table->string("plate", 12);
             $table->string("year", 10);
             $table->integer("occupant_capacity");
             $table->double("load_capacity");

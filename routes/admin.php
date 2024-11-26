@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
-<<<<<<< Updated upstream
-=======
 use App\Http\Controllers\Admin\OccupantsController;
 use App\Http\Controllers\admin\ProgrammingsController;
 use App\Http\Controllers\admin\RouteController;
@@ -14,7 +12,6 @@ use App\Http\Controllers\admin\SectorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\UsertypesController;
 use App\Http\Controllers\admin\VehiclecolorsController;
->>>>>>> Stashed changes
 use App\Http\Controllers\admin\VehicleController;
 use App\Http\Controllers\admin\VehicleimagesController;
 use App\Http\Controllers\Admin\VehicleOccupantsController;
@@ -32,8 +29,7 @@ Route::resource('zones', ZoneController::class)->names('admin.zones');
 Route::resource('zonecoords', ZonecoordController::class)->names('admin.zonecoords');
 
 Route::resource('vehicletypes', VehicletypesController::class)->names('admin.vehicletypes');
-<<<<<<< Updated upstream
-=======
+
 Route::resource('vehiclecolors', VehiclecolorsController::class)->names('admin.vehiclecolors');
 Route::resource('usertypes', UsertypesController::class)->names('admin.usertypes');
 
@@ -42,9 +38,12 @@ Route::resource('sectors', SectorController::class)->names('admin.sectors');
 
 Route::resource('routes', RouteController::class)->names('admin.routes');
 Route::resource('routezones', RoutezoneController::class)->names('admin.routezones');
+
 Route::resource('programming', ProgrammingsController::class)->names('admin.programming');
 Route::get('searchprogramming', [ProgrammingsController::class, 'searchprogramming'])->name('admin.searchprogramming');
 
+Route::get('routezones/create/{route_id}', [RoutezoneController::class, 'create'])
+    ->name('admin.routezones.create');
 Route::resource('/occupants', VehicleOccupantsController::class)->names('admin.vehicleoccupants');
 Route::resource('/occupant', OccupantsController::class)->names('admin.occupant');
 
@@ -53,4 +52,4 @@ Route::get('searchbydni/{id}', [OccupantsController::class, 'searchbydni'])->nam
 Route::post('occupants/confirm-assignment', [OccupantsController::class, 'confirmAssignment'])->name('admin.occupants.confirm-assignment');
 
 Route::get('/vehicles/{id}', [VehicleController::class, 'showOccupants'])->name('admin.vehicles.occupants');
->>>>>>> Stashed changes
+

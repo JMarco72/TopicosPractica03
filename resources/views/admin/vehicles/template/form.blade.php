@@ -45,36 +45,60 @@
         ]) !!}
     </div>
     <div class="form-group col-6">
-        {!! Form::label('color_id', 'Color') !!}
-        {!! Form::select('color_id', $colors, null, [
-            'class' => 'form-control',
-            'id' => 'color_id',
-            'required',
-        ]) !!}
+    {!! Form::label('color_id', 'Color') !!}
+    <div class="d-flex align-items-center">
+        <select name="color_id" id="color_id" class="form-control" required>
+            <option value="" disabled selected>Seleccione un color</option>
+            @foreach ($colors as $id => $color)
+                <option value="{{ $id }}" data-rgb="{{ $color['rgb'] }}" 
+                    {{ isset($vehicle) && $vehicle->color_id == $id ? 'selected' : '' }}>
+                    {{ $color['name'] }}
+                </option>
+            @endforeach
+        </select>
+        <div id="colorPreview" style="
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #ddd; /* Borde suave */
+            margin-left: 10px; /* Espaciado entre el select y el círculo */
+            background-color: {{ isset($vehicle) && isset($colors[$vehicle->color_id]) ? $colors[$vehicle->color_id]['rgb'] : '#ffffff' }};
+        "></div>
     </div>
 </div>
+</div>
+
 <div class="form-row">
     <div class="form-group col-6">
         {!! Form::label('plate', 'Placa') !!}
-        {!! Form::text('plate', null, [
-            'class' => 'form-control',
-            'placeholder' => 'Placa del vehículo',
-            'required',
-        ]) !!}
+        {!! Form::text('plate', isset($vehicle) ? $vehicle->plate : 'PERU ', [
+    'class' => 'form-control',
+    'placeholder' => 'placa del vehículo',
+    'required',
+    'maxlength' => '12'
+]) !!}
+        <small class="form-text text-muted">
+            El formato debe ser: <strong>PERU 123-456</strong>
+        </small>
     </div>
     <div class="form-group col-6">
         {!! Form::label('year', 'Año') !!}
-        {!! Form::number('year', null, [
-            'class' => 'form-control',
-            'placeholder' => 'Año del vehículo',
-            'required',
-        ]) !!}
-    </div>
+        {!! Form::select('year', 
+            array_combine(range(2000, date('Y')), range(2000, date('Y'))), 
+            null, [
+                'class' => 'form-control',
+                'required' => 'required',
+                'placeholder' => 'Seleccione el año del vehículo',
+            ]) !!}
+    
+    </div> 
 </div>
 <div class="form-row">
     <div class="form-group col-6">
         {!! Form::label('occupant_capacity', 'Capacidad de ocupantes') !!}
-        {!! Form::number('occupant_capacity', null, [
+        {!! Form::select('occupant_capacity', 
+        array_combine(range(1, 6), range(1, 6)), 
+        null, [
             'class' => 'form-control',
             'placeholder' => 'Capacidad de ocupantes del vehículo',
             'required',
@@ -155,4 +179,24 @@
     $('#imageButton').click(function() {
         $('#imageInput').click();
     });
+
+    $(document).ready(function () {
+    // Inicializar la vista previa del color al cargar (solo para editar)
+    var selectedOption = $('#color_id').find(':selected'); // Captura la opción seleccionada
+    var colorRgb = selectedOption.data('rgb'); // Obtén el valor RGB
+    if (colorRgb) {
+        $('#colorPreview').css('background-color', colorRgb); // Cambia el color del círculo
+    } else {
+        $('#colorPreview').css('background-color', '#ffffff'); // Blanco por defecto si no hay selección
+    }
+
+    // Cambiar la vista previa al seleccionar un nuevo color
+    $('#color_id').change(function () {
+        var selectedOption = $(this).find(':selected'); // Captura la opción seleccionada
+        var colorRgb = selectedOption.data('rgb'); // Obtén el valor RGB
+        $('#colorPreview').css('background-color', colorRgb); // Cambia el color del círculo
+    });
+});
+
+
 </script>

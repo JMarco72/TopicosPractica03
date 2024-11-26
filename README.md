@@ -73,11 +73,32 @@ php artisan serve
 php artisan storage:link 
 
 
-php artisan make:controller IndexControler -> crear indexcontroler
-php artisan migrate   ->basedatos migrar
-php artisan make:migration create_vehicles_table  -> crear migracion
-php artisan migrate:rollback -> borrar la ultima migracion
-php artisan make:model Vehicle -> crear modelo
-php artisan make:seeder VehicleSeeder -> crear seeder
-php artisan migrate:fresh --seed  ->ejecutar el seed creado
-php artisan make:factory Vehiclefactory  -> crear factory
+php artisan make:controller IndexController -r     -> crear indexcontroler
+php artisan migrate       ->basedatos migrar
+php artisan make:migration create_vehicles_table          -> crear migracion
+php artisan migrate:rollback             -> borrar la ultima migracion
+php artisan make:model Vehicle               -> crear modelo
+php artisan make:seeder VehicleSeeder            -> crear seeder
+php artisan migrate:fresh --seed             ->ejecutar el seed creado
+php artisan make:factory Vehiclefactory             -> crear factory
+
+****************************COMANDOS PARA SUBIR A GIT**************************
+Actualizar cambios
+
+git pull origin main
+
+Subir cambios a git hub
+
+git init
+
+git add .
+
+git checkout -b nombre_de_su_rama  -> para cambiarse de rama
+
+git commit -m "Mensaje de commit"
+
+git push -u origin tu_nombre_de_rama
+
+
+Si el envio fue exitoso en el repositorio de git crear un pull request.
+repositorio: https://github.com/Alexander091196/pry_reciclaje_usat.git

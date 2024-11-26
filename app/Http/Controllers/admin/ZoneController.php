@@ -39,9 +39,10 @@ class ZoneController extends Controller
                         </div>';
                 })
                 ->addColumn('coords', function ($zone) {
-                    return '<a href="'.route('admin.zones.show',$zone->id).'" class="btn btn-success btn-sm"><i class="fas fa-map-marked-alt"></i></i></a>';
+                    return '<a href="' . route('admin.zones.show', $zone->id) . '" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i></a> 
+                            <button class="btn btn-danger btn-sm btnMap" id='. $zone->id .'><i class="fas fa-map-marked-alt"></i></button>';
                 })
-                ->rawColumns(['actions','coords'])  // Declarar columnas que contienen HTML
+                ->rawColumns(['actions', 'coords'])  // Declarar columnas que contienen HTML
                 ->make(true);
         } else {
             return view('admin.zones.index', compact('zones'));
@@ -78,14 +79,30 @@ class ZoneController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        $zone = DB::select('CALL sp_zones(2,'.$id.')')[0];
-        $coords = Zonecoord::where('zone_id',$id)->get();
-        
-        return view('admin.zones.show', compact('zone','coords'));
-    }
+        $zone = DB::select('CALL sp_zones(2,' . $id . ')')[0];
 
+        $coords = Zonecoord::where('zone_id', $id)->get();
+
+        if ($request->ajax()) {
+
+            return DataTables::of($coords)
+                ->addColumn('actions', function ($coord) {
+                    return '      
+                                <form action="' . route('admin.zonecoords.destroy', $coord->id) . '" method="POST" class="frmEliminar d-inline">
+                                    ' . csrf_field() . method_field('DELETE') . '
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                </form>';
+                })
+                ->rawColumns(['actions'])  // Declarar columnas que contienen HTML
+                ->make(true);
+        } else {
+            return view('admin.zones.show', compact('zone', 'coords'));
+        }
+
+        //return view('admin.zones.show', compact('zone', 'coords'));
+    }
     /**
      * Show the form for editing the specified resource.
      */
