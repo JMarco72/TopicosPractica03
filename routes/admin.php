@@ -44,6 +44,9 @@ Route::get('searchprogramming', [ProgrammingsController::class, 'searchprogrammi
 
 Route::get('routezones/create/{route_id}', [RoutezoneController::class, 'create'])
     ->name('admin.routezones.create');
+
+
+    
 Route::resource('/occupants', VehicleOccupantsController::class)->names('admin.vehicleoccupants');
 Route::resource('/occupant', OccupantsController::class)->names('admin.occupant');
 

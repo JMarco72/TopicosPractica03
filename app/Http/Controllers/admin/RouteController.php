@@ -15,9 +15,10 @@ class RouteController extends Controller
      */
     public function index(Request $request)
     {
+        $routes = Route::select('id', 'name as nombre', 'status')->get();
+
         if ($request->ajax()) {
-            $routes = Route::select('id', 'name as nombre', 'status')
-                ->get();
+
 
             return DataTables::of($routes)
                 ->addColumn('actions', function ($route) {
@@ -93,12 +94,15 @@ class RouteController extends Controller
 
         $routezones = DB::select("
         SELECT 
-            z.id AS zone_id,
-            z.name AS zona, 
-            z.area AS area 
-        FROM routezones r2
-        INNER JOIN zones z ON z.id = r2.zone_id
-        WHERE r2.route_id = ?
+            r.id, 
+            r.name,
+            r.latitude_start,
+            r.longitude_start,
+            r.latitude_end,
+            r.longitude_end
+        FROM routes r 
+        INNER JOIN routezones r2 ON r.id = r2.route_id 
+        where r2.route_id=?
     ", [$id]);
 
         $zonesMap = DB::table('zones')

@@ -11,6 +11,6 @@ class Routezone extends Model
 
     protected $guarded = [];
 
-    protected $fillable = ['route_id', 'zone_id']; // Campos asignables
+    //protected $fillable = ['route_id', 'zone_id']; // Campos asignables
 
 }

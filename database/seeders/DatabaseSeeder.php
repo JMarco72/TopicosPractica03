@@ -13,13 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
+        
         $this->call(VehicletypeSeeder::class); // no eliminamos este seeder porque ahi datos de prioridad en el sistema
         $this->call(RouteStatusSeeder::class);
         $this->call(DepartmentSeeder::class);
