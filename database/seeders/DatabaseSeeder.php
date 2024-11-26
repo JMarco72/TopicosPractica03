@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Brandmodel;
+use App\Models\Vehiclecolor;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +21,9 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-
+        $this->call(BrandSeeder::class);
+        $this->call(BrandmodelSeeder::class);
+        $this->call(VehiclecolorSeeder::class);
         $this->call(VehicletypeSeeder::class); // no eliminamos este seeder porque ahi datos de prioridad en el sistema
         $this->call(RouteStatusSeeder::class);
         $this->call(DepartmentSeeder::class);
