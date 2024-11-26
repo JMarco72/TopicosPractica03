@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('vehicleroutes', function (Blueprint $table) {
             $table->id();
-            $table->date("date_route");
-            $table->time("time_route");
-            $table->text("description")->nullable();
-            $table->unsignedBigInteger("vehicle_id");
-            $table->unsignedBigInteger("route_id");
-            $table->unsignedBigInteger("schedule_id");
-            $table->foreign("vehicle_id")->references("id")->on("vehicles");
-            $table->foreign("route_id")->references("id")->on("routes");
-            $table->foreign("schedule_id")->references("id")->on("schedules");
+            $table->date('date_route');
+            $table->text('description')->nullable();
+            $table->unsignedBigInteger('vehicle_id');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles');
+            $table->unsignedBigInteger('route_id');
+            $table->foreign('route_id')->references('id')->on('routes');
+            $table->unsignedBigInteger('routestatus_id');
+            $table->foreign('routestatus_id')->references('id')->on('routestatus');
+            $table->unsignedBigInteger('programming_id');
+            $table->foreign('programming_id')->references('id')->on('programmings');
             $table->timestamps();
         });
     }

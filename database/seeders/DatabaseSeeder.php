@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call(VehicletypeSeeder::class); // no eliminamos este seeder porque ahi datos de prioridad en el sistema
-
+        $this->call(RouteStatusSeeder::class);
         $this->call(DepartmentSeeder::class);
         $this->call(ProvinceSeeder::class);
         $this->call(DistrictSeeder::class);
