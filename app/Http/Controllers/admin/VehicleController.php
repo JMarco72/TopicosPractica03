@@ -20,43 +20,50 @@ class VehicleController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $vehicles = DB::select('CALL sp_vehicles');
+{
+    $vehicles = DB::select('CALL sp_vehicles');
 
-        if ($request->ajax()) {
-
-            return DataTables::of($vehicles)
-                ->addColumn('logo', function ($vehicle) {
-                    return '<img src="' . ($vehicle->logo == '' ? asset('storage/brand_logo/no_image.png') : asset($vehicle->logo)) . '" width="100px" height="70px" class="card">';
-                })
-                ->addColumn('status', function ($vehicle) {
-                    return $vehicle->status == 1 ? '<div style="color: green"><i class="fas fa-check"></i> Activo</div>' : '<div style="color: red"><i class="fas fa-times"></i> Inactivo</div>';
-                })
-                ->addColumn('actions', function ($vehicle) {
-                    return '
-                    <div class="dropdown">
-                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bars"></i>                        
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <button class="dropdown-item btnEditar" id="' . $vehicle->id . '"><i class="fas fa-edit"></i>  Editar</button>
-                            <button class="dropdown-item btnImagenes" id="' . $vehicle->id . '"><i class="fas fa-image"></i>  Imágenes</button>
-                            <form action="' . route('admin.vehicles.destroy', $vehicle->id) . '" method="POST" class="frmEliminar d-inline">
-                                ' . csrf_field() . method_field('DELETE') . '
-                                <button type="submit" class="dropdown-item"><i class="fas fa-trash"></i> Eliminar</button>
-                            </form>
-                        </div>
-                    </div>';
-                })
-                ->addColumn('occupants', function () {
-                    return '<button class="btn btn-success btn-sm"><i class="fas fa-people-arrows"></i>&nbsp;&nbsp;(0)</button>';
-                })
-                ->rawColumns(['logo', 'status', 'occupants', 'actions'])  // Declarar columnas que contienen HTML
-                ->make(true);
-        } else {
-            return view('admin.vehicles.index', compact('vehicles'));
-        }
+    // Asignar un valor predeterminado a logo si es null
+    foreach ($vehicles as $vehicle) {
+        $vehicle->logo = $vehicle->logo ?? 'storage/brand_logo/no_image.png';
     }
+
+    if ($request->ajax()) {
+        return DataTables::of($vehicles)
+            ->addColumn('logo', function ($vehicle) {
+                return '<img src="' . asset($vehicle->logo) . '" width="100px" height="70px" class="card">';
+            })
+            ->addColumn('status', function ($vehicle) {
+                return $vehicle->status == 1 ? '<div style="color: green"><i class="fas fa-check"></i> Activo</div>' : '<div style="color: red"><i class="fas fa-times"></i> Inactivo</div>';
+            })
+            ->addColumn('actions', function ($vehicle) {
+                return '
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars"></i>                        
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button class="dropdown-item btnEditar" id="' . $vehicle->id . '"><i class="fas fa-edit"></i>  Editar</button>
+                        <button class="dropdown-item btnImagenes" id="' . $vehicle->id . '"><i class="fas fa-image"></i>  Imágenes</button>
+                        <form action="' . route('admin.vehicles.destroy', $vehicle->id) . '" method="POST" class="frmEliminar d-inline">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="dropdown-item"><i class="fas fa-trash"></i> Eliminar</button>
+                        </form>
+                    </div>
+                </div>';
+            })
+            ->addColumn('occupants', function ($vehicle) {
+                return '<a href="' . route('admin.vehicles.occupants', $vehicle->id) . '" class="btn btn-success btn-sm">
+                            <i class="fas fa-people-arrows"></i>&nbsp;&nbsp;(0)
+                        </a>';
+            })            
+            ->rawColumns(['logo', 'status', 'occupants', 'actions'])  // Declarar columnas que contienen HTML
+            ->make(true);
+    }
+
+    return view('admin.vehicles.index', compact('vehicles'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -120,10 +127,29 @@ class VehicleController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        $images = Vehicleimage::where("vehicle_id", $id)->get();
-        return view("admin.vehicles.show", compact("images"));
-    }
+{
+    $vehicle = Vehicle::findOrFail($id);
+
+    $occupants = DB::select("
+        SELECT 
+            o.id, 
+            u.name AS usernames, 
+            ut.name AS usertype, 
+            o.assignment_date AS date
+        FROM vehicleoccupants o  
+        INNER JOIN vehicles v ON o.vehicle_id = v.id
+        INNER JOIN users u ON o.user_id = u.id
+        INNER JOIN usertypes ut ON o.usertype_id = ut.id
+        WHERE o.status = 1
+        AND v.id = ?
+    ", [$id]);
+
+    $images = Vehicleimage::where("vehicle_id", $id)->get();
+
+    return view("admin.vehicles.show", compact("vehicle", "occupants", "images"));
+}
+
+
 
     /**
      * Show the form for editing the specified resource.
