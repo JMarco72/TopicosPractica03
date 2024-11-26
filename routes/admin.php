@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
+use App\Http\Controllers\Admin\OccupantsController;
 use App\Http\Controllers\admin\ProgrammingsController;
 use App\Http\Controllers\admin\RouteController;
 use App\Http\Controllers\admin\RoutezoneController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\admin\UsertypesController;
 use App\Http\Controllers\admin\VehiclecolorsController;
 use App\Http\Controllers\admin\VehicleController;
 use App\Http\Controllers\admin\VehicleimagesController;
+use App\Http\Controllers\Admin\VehicleOccupantsController;
 use App\Http\Controllers\admin\VehicletypesController;
 use App\Http\Controllers\admin\ZoneController;
 use App\Http\Controllers\admin\ZonecoordController;
@@ -27,6 +29,7 @@ Route::resource('zones', ZoneController::class)->names('admin.zones');
 Route::resource('zonecoords', ZonecoordController::class)->names('admin.zonecoords');
 
 Route::resource('vehicletypes', VehicletypesController::class)->names('admin.vehicletypes');
+
 Route::resource('vehiclecolors', VehiclecolorsController::class)->names('admin.vehiclecolors');
 Route::resource('usertypes', UsertypesController::class)->names('admin.usertypes');
 
@@ -41,3 +44,12 @@ Route::get('searchprogramming', [ProgrammingsController::class, 'searchprogrammi
 
 Route::get('routezones/create/{route_id}', [RoutezoneController::class, 'create'])
     ->name('admin.routezones.create');
+Route::resource('/occupants', VehicleOccupantsController::class)->names('admin.vehicleoccupants');
+Route::resource('/occupant', OccupantsController::class)->names('admin.occupant');
+
+Route::get('typebyuser/{id}', [VehicleOccupantsController::class, 'typebyuser'])->name('admin.typebyuser');
+Route::get('searchbydni/{id}', [OccupantsController::class, 'searchbydni'])->name('admin.searchbydni');
+Route::post('occupants/confirm-assignment', [OccupantsController::class, 'confirmAssignment'])->name('admin.occupants.confirm-assignment');
+
+Route::get('/vehicles/{id}', [VehicleController::class, 'showOccupants'])->name('admin.vehicles.occupants');
+

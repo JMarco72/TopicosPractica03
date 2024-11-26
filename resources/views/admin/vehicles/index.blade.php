@@ -28,7 +28,43 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($vehicles as $vehicle)
+                    <tr>
+                        <td>{{ $vehicle->id }}</td>
 
+                        <td>
+                            @if (!empty($vehicle->logo))
+                                <img src="{{ asset($vehicle->logo) }}" alt="Logo del vehículo" width="50">
+                            @else
+                                <img src="{{ asset('storage/brand_logo/no_image.png') }}" alt="Sin imagen" width="50">
+                            @endif
+                        </td>
+                        <td>{{ $vehicle->name }}</td>
+                        <td>{{ $vehicle->brand }}</td>
+                        <td>{{ $vehicle->model }}</td>
+                        <td>{{ $vehicle->vtype }}</td>
+                        <td>{{ $vehicle->plate }}</td>
+                        <td>
+                            <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
+                                class="btn btn-secondary btn-sm"><i class="fas fa-user-plus"></i></a>
+                        </td>
+
+                        <td><!--<a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>-->
+                            <button class="btnEditar btn btn-primary btn-sm" id={{ $vehicle->id }}><i
+                                    class="fa fa-edit"></i></button>
+                        </td>
+                        <td>
+                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
+                                class="fmrEliminar">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                            </form>
+                        </td>
+
+
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
