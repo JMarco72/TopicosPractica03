@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
 use App\Http\Controllers\Admin\OccupantsController;
+
 use App\Http\Controllers\admin\ProgrammingsController;
 use App\Http\Controllers\admin\RouteController;
 use App\Http\Controllers\admin\RoutezoneController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\admin\SectorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\UsertypesController;
 use App\Http\Controllers\admin\VehiclecolorsController;
+
 use App\Http\Controllers\admin\VehicleController;
 use App\Http\Controllers\admin\VehicleimagesController;
 use App\Http\Controllers\Admin\VehicleOccupantsController;
@@ -41,6 +43,7 @@ Route::resource('routezones', RoutezoneController::class)->names('admin.routezon
 
 Route::resource('programming', ProgrammingsController::class)->names('admin.programming');
 Route::get('searchprogramming', [ProgrammingsController::class, 'searchprogramming'])->name('admin.searchprogramming');
+
 
 Route::get('routezones/create/{route_id}', [RoutezoneController::class, 'create'])
     ->name('admin.routezones.create');
