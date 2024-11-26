@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Vehiclecolor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class VehiclecolorsController extends Controller
@@ -14,25 +15,35 @@ class VehiclecolorsController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $colors = Vehiclecolor::all();
-            return DataTables::of($colors)
-                ->addColumn('edit', function ($row) {
-                    return '<button class="btn btn-primary btnEditar" id="' . $row->id . '"><i class="fa fa-edit"></i></button>';
-                })
-                ->addColumn('delete', function ($row) {
-                    return '<form action="' . route('admin.vehiclecolors.destroy', $row->id) . '" method="POST" class="fmrEliminar">
-                                ' . csrf_field() . '
-                                ' . method_field('DELETE') . '
-                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                            </form>';
-                })
-                ->rawColumns(['edit', 'delete'])
-                ->make(true);
-        }
-    
-        return view('admin.vehiclecolors.index');
+           // Consulta los colores desde la base de datos utilizando DB::select
+    $vehiclecolors = DB::select('select id, name, red, green, blue, description from vehiclecolors');
 
+    if ($request->ajax()) {
+        return DataTables::of($vehiclecolors)
+            ->addColumn('actions', function ($vehiclecolor) {
+                return '
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton-' . $vehiclecolor->id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars"></i>                        
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-' . $vehiclecolor->id . '">
+                        <button class="dropdown-item btnEditar" id="' . $vehiclecolor->id . '">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <form action="' . route('admin.vehiclecolors.destroy', $vehiclecolor->id) . '" method="POST" class="frmEliminar">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
+
+    return view('admin.vehiclecolors.index');
     }
 
 
