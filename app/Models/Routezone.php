@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Routezone extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
+
+    protected $fillable = ['route_id', 'zone_id']; // Campos asignables
+
 }

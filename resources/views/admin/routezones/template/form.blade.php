@@ -1,6 +1,11 @@
+{!! Form::open(['route' => 'admin.routezones.store', 'id' => 'addZoneForm']) !!}
+
+<!-- Ocultar el ID de la ruta -->
+{!! Form::hidden('route_id', $route->id) !!}
+
 <div class="form-row">
     
-    {!! Form::hidden('route_id', $route->id ?? '', ['class' => 'form-control']) !!}
+    {!! Form::hidden('route_id',$route->id, ['class'=>'form-control']) !!}
 
     <div class="form-group col-6">
         <div class="form-group">

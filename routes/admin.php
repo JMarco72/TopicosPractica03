@@ -35,3 +35,5 @@ Route::resource('sectors', SectorController::class)->names('admin.sectors');
 
 Route::resource('routes', RouteController::class)->names('admin.routes');
 Route::resource('routezones', RoutezoneController::class)->names('admin.routezones');
+Route::get('routezones/create/{route_id}', [RoutezoneController::class, 'create'])
+    ->name('admin.routezones.create');

@@ -15,47 +15,38 @@ class RouteController extends Controller
      */
     public function index(Request $request)
     {
-
-        $routes = DB::select("
-        SELECT 
-            r.id, 
-            r.name as nombre,
-            r.status 
-        FROM routes r
-        ");
-
-
         if ($request->ajax()) {
+            $routes = Route::select('id', 'name as nombre', 'status')
+                ->get();
 
             return DataTables::of($routes)
-                ->addColumn('actions', function ($routes) {
+                ->addColumn('actions', function ($route) {
                     return '
                         <div class="dropdown">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bars"></i>                        
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item btnEditar" id="' . $routes->id . '"><i class="fas fa-edit"></i>  Editar</button>
-                                <form action="' . route('admin.routes.destroy', $routes->id) . '" method="POST" class="frmEliminar d-inline">
+                                <button class="dropdown-item btnEditar" id="' . $route->id . '"><i class="fas fa-edit"></i> Editar</button>
+                                <form action="' . route('admin.routes.destroy', $route->id) . '" method="POST" class="frmEliminar d-inline">
                                     ' . csrf_field() . method_field('DELETE') . '
                                     <button type="submit" class="dropdown-item"><i class="fas fa-trash"></i> Eliminar</button>
                                 </form>
                             </div>
                         </div>';
                 })
-                ->addColumn('status', function ($routes) {
-                    return $routes->status == 1 ? '<div style="color: green"><i class="fas fa-check"></i> Activo</div>' : '<div style="color: red"><i class="fas fa-times"></i> Inactivo</div>';
+                ->addColumn('status', function ($route) {
+                    return $route->status == 1 ? '<div style="color: green"><i class="fas fa-check"></i> Activo</div>' : '<div style="color: red"><i class="fas fa-times"></i> Inactivo</div>';
                 })
-                ->addColumn('gps', function ($routes) {
-                    return '<a href="' . route('admin.routes.show', $routes->id) . '" class="btn btn-danger btn-sm"><i class="fas fa-map-marked-alt"></i></a> ';
+                ->addColumn('gps', function ($route) {
+                    return '<a href="' . route('admin.routes.show', $route->id) . '" class="btn btn-danger btn-sm"><i class="fas fa-map-marked-alt"></i></a>';
                 })
-                ->rawColumns(['actions', 'status', 'gps'])  // Declarar columnas que contienen HTML
+                ->rawColumns(['actions', 'status', 'gps'])
                 ->make(true);
-        } else {
-            return view('admin.routes.index');
         }
-    }
 
+        return view('admin.routes.index');
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -88,47 +79,20 @@ class RouteController extends Controller
             'status' => $request->has('status') ? 1 : 0,
         ]);
 
-        // Redirigir o devolver respuesta
-        return redirect()->route('admin.routes.index');
+        return redirect()->route('admin.routes.index')->with('success', 'Ruta creada exitosamente');
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        // Obtener la ruta principal desde la base de datos
-        $routes = DB::select("
-            SELECT 
-                r.id, 
-                r.name AS nombre, 
-                r.latitude_start AS lat_start, 
-                r.longitude_start AS lng_start, 
-                r.latitude_end AS lat_end, 
-                r.longitude_end AS lng_end, 
-                r.status 
-            FROM routes r
-            WHERE r.id = ?
-        ", [$id]);
 
-        // Verificar si se encontró la ruta
-        if (empty($routes)) {
-            abort(404, 'Ruta no encontrada');
-        }
+        $route = Route::findOrFail($id);
 
-        // Mapear la ruta
-        $route = [
-            'id' => $routes[0]->id,
-            'name' => $routes[0]->nombre,
-            'lat_start' => $routes[0]->lat_start,
-            'lng_start' => $routes[0]->lng_start,
-            'lat_end' => $routes[0]->lat_end,
-            'lng_end' => $routes[0]->lng_end,
-        ];
-
-        // Obtener las zonas relacionadas con la ruta
         $routezones = DB::select("
-            SELECT 
+        SELECT 
                 z.id AS zone_id,
                 z.name AS zona, 
                 z.area AS area 
@@ -137,12 +101,36 @@ class RouteController extends Controller
             WHERE r2.route_id = ?
         ", [$id]);
 
-        // Pasar los datos a la vista
-        return view('admin.routes.show', [
-            'route' => $route,          // Información principal de la ruta
-            'routezones' => $routezones // Zonas relacionadas
-        ]);
+        $zonesMap = DB::table('zones')
+            ->leftJoin('zonecoords', 'zones.id', '=', 'zonecoords.zone_id')
+            ->whereIn('zones.id', function ($query) use ($id) {
+                $query->select('zone_id')
+                    ->from('routezones')
+                    ->where('route_id', $id);
+            })
+            ->select('zones.name as zone', 'zonecoords.latitude', 'zonecoords.longitude')
+            ->get();
+
+        // Agrupa las coordenadas por zona
+        $groupedZones = $zonesMap->groupBy('zone');
+
+        $perimeter = $groupedZones->map(function ($zone) {
+            $coords = $zone->map(function ($item) {
+                return [
+                    'lat' => $item->latitude,
+                    'lng' => $item->longitude,
+                ];
+            })->toArray();
+
+            return [
+                'name' => $zone[0]->zone,
+                'coords' => $coords,
+            ];
+        })->values();
+
+        return view('admin.routes.show', compact('route', 'routezones', 'perimeter'));
     }
+
 
 
 
@@ -151,60 +139,52 @@ class RouteController extends Controller
      */
     public function edit(string $id)
     {
-        // Recupera la ruta de la base de datos (asumiendo que el modelo se llama "Route")
+        // Recupera la ruta de la base de datos
         $route = Route::findOrFail($id);
-
-        // De ser necesario, puedes recuperar información adicional aquí (si tienes relaciones, por ejemplo)
-        // Pasar los datos a la vista
         return view("admin.routes.edit", compact("route"));
     }
+
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        try {
-            // Validar los datos del formulario
-            $request->validate([
-                "name" => "unique:routes,name," . $id,
-                "latitude_start" => "required|numeric",
-                "longitude_start" => "required|numeric",
-                "latitude_end" => "required|numeric",
-                "longitude_end" => "required|numeric",
-            ]);
+        // Validar los datos del formulario
+        $request->validate([
+            "name" => "required|unique:routes,name," . $id,
+            "latitude_start" => "required|numeric",
+            "longitude_start" => "required|numeric",
+            "latitude_end" => "required|numeric",
+            "longitude_end" => "required|numeric",
+        ]);
 
-            // Obtener la ruta que vamos a actualizar
-            $route = Route::findOrFail($id);
+        // Obtener la ruta que vamos a actualizar
+        $route = Route::findOrFail($id);
 
-            // Actualizar los datos de la ruta
-            $route->update([
-                'name' => $request->name,
-                'latitude_start' => $request->latitude_start,
-                'longitude_start' => $request->longitude_start,
-                'latitude_end' => $request->latitude_end,
-                'longitude_end' => $request->longitude_end,
-                'status' => $request->has('status') ? 1 : 0, // Verificar el estado
-            ]);
+        // Actualizar los datos de la ruta
+        $route->update([
+            'name' => $request->name,
+            'latitude_start' => $request->latitude_start,
+            'longitude_start' => $request->longitude_start,
+            'latitude_end' => $request->latitude_end,
+            'longitude_end' => $request->longitude_end,
+            'status' => $request->has('status') ? 1 : 0, // Verificar el estado
+        ]);
 
-            return response()->json(['message' => 'Ruta actualizada correctamente'], 200);
-        } catch (\Throwable $th) {
-            return response()->json(['message' => 'Error en la actualización: ' . $th->getMessage()], 500);
-        }
+        return redirect()->route('admin.routes.index')->with('success', 'Ruta actualizada correctamente');
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-
         try {
-            $routes = Route::find($id);
-            $routes->delete();
-            return response()->json(['message' => 'Vehículo eliminado correctamente'], 200);
+            $route = Route::findOrFail($id);
+            $route->delete();
+            return response()->json(['message' => 'Ruta eliminada correctamente'], 200);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Error la eliminación: ' . $th->getMessage()], 500);
+            return response()->json(['message' => 'Error en la eliminación: ' . $th->getMessage()], 500);
         }
     }
 }

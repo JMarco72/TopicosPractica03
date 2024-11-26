@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Route;
 use App\Models\Routezone;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,11 +22,9 @@ class RoutezoneController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($route_id)
     {
-        $zones = DB::table('zones')->pluck('name', 'id'); // Cargar id como clave y nombre como valor
-    
-        return view('admin.routezones.create', compact('zones'));
+        // Obtener todas las zonas disponibles
     }
 
     /**
@@ -33,32 +32,26 @@ class RoutezoneController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Routezone::create($request->all());
+        return redirect()->route('admin.routes.show', $request->route_id)->with('success', 'Agregado correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-
-        $route = Route::select('name', 'status')->where('id', $id)->get();
-
-        // Obtener la ruta
-        $route = Route::find($id);
-
-        // Retorna la vista con la ruta
-        return view('admin.routezone.show', compact('route'));
+        //
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $route = Route::find($id);
+        // $lastcoord = Zonecoord::select('latitude as lat', 'longitude as lng')
+        // ->where('zone_id', $id)->latest()->first();
+        $zones = Zone::pluck('name', 'id');
+
+        return view('admin.routezones.create', compact('route', 'zones'));
     }
 
     /**
@@ -74,6 +67,9 @@ class RoutezoneController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $rz = Routezone::find($id);
+        $route_id = $rz->route_id;
+        $rz->delete();
+        return redirect()->route('admin.routes.show', $route_id)->with('Success', 'Eliminado correctamente');
     }
 }

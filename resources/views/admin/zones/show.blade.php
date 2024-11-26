@@ -24,7 +24,6 @@
                             <label for="">Descripción:</label>
                             <p>{{ $zone->description }}</p>
                         </div>
-
                     </div>
                 </div>
                 <div class="col-9">
@@ -37,13 +36,11 @@
                                         <th>LONGITUD</th>
                                         <th></th>
                                     </tr>
-
                                 </thead>
                             </table>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="card-footer">
@@ -73,8 +70,6 @@
 
 @section('js')
     <script>
-
-
         $(document).ready(function() {
             var table = $('#datatable').DataTable({
                 "ajax": "{{ route('admin.zones.show', $zone->id) }}", // La ruta que llama al controlador vía AJAX
