@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-header">
             <button class="btn btn-success float-right" id="btnNuevo"><i class="fas fa-plus"></i> Nuevo</button>
-            <h3>Ruta</h3>
+            <h3>Agregar Ruta</h3>
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped" id="datatable">

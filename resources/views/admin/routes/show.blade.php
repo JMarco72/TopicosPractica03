@@ -3,49 +3,56 @@
 @section('title', 'Perímetro de zona')
 
 @section('content')
-    <div class="p-3"></div>
-    <div class="card">
-        <div class="card-header">
-            <button class="btnEditar btn-success float-right" id={{ $route->id }}><i class="fas fa-plus-circle"></i>
-                Agregar Zona a Ruta</button>
-
-            Nombre de la Ruta: {{ $route->name }} <br>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-4 card" style="min-height: 50px">
-                    <div class="card-body">
-                        <label for="">Latitud y Longitud Inicial:</label>
-                        {{ $route->latitudestart }} {{ $route->longitudestart }}<br>
-                        <label for="">Longitud y longitud Final:</label>
-                        {{ $route->latitudefinal }} {{ $route->longitudefinal }}<br>
-                    </div>
+<div class="p-3"></div>
+<div class="card">
+    <div class="card-header">
+        <button class="btn btn-success float-right" id="btnNuevo" data-id={{ $route->id }}>
+            <i class="fas fa-plus"></i> Agregar Zona a Ruta
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- Información de la ruta -->
+            <div class="col-3 card" style="min-height: 50px">
+                <br>
+                <div class="card-body">
+                    <label for="">Nombre de la Ruta:</label><br>
+                    {{ $route->name }} <br><br>
+                    <label for="">Latitud y Longitud Inicial:</label><br>
+                    {{ $route->latitudestart }} {{ $route->longitudestart }}<br><br>
+                    <label for="">Latitud y Longitud Final:</label><br>
+                    {{ $route->latitudefinal }} {{ $route->longitudefinal }}<br><br>
                 </div>
-                <div class="col-8 card" style="min-height: 50px">
+            </div>
+
+            <!-- Tabla de zonas -->
+            <div class="col-9">
+                <div class="card">
                     <div class="card-body">
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="datatable">
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>ZONAS</th>
                                     <th>AREA</th>
-                                    <th></th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($routezones as $route)
+                                @foreach ($routezones as $zone)
                                     <tr>
-                                        <td>{{ $route->id }}</td>
-                                        <td>{{ $route->name }}</td>
-                                        <th>
-                                            <form action="{{ route('admin.routezones.destroy', $route->id) }}" method="POST"
-                                                class="fmrEliminar">
-                                                @method('delete')
+                                        <td>{{ $zone->id }}</td>
+                                        <td>{{ $zone->name }}</td>
+                                        <td>{{ $zone->area }}</td>
+                                        <td>
+                                            <form action="{{ route('admin.routezones.destroy', $zone->id) }}" method="POST" class="fmrEliminar">
                                                 @csrf
+                                                @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
-                                                    <i class="fa fa-trash"></i></a>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
                                             </form>
-                                        </th>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -54,170 +61,117 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer"></div>
     </div>
+</div>
 
-    <div class="card">
-        <div class="card-header">
-            Mapa de la ruta
-        </div>
-        <div class="card-body">
-            <div id="map" style="height:400px"></div>
-        </div>
+<!-- Mapa -->
+<div class="card">
+    <div class="card-header">Mapa de la ruta</div>
+    <div class="card-body">
+        <div id="map" style="height:400px"></div>
     </div>
+</div>
 
-    <!-- Modal para agregar/editar zona -->
-    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Formulario de Zonas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Aquí se cargará dinámicamente el formulario para agregar zona -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveZoneBtn">Guardar cambios</button>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Formulario de Zonas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí se cargará el formulario -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="saveZoneBtn">Guardar</button>
             </div>
         </div>
     </div>
-
+</div>
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
+<!-- Estilos adicionales -->
 @stop
 
 @section('js')
-    <script>
-        $('#datatable').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            }
-        });
+<script>
+    // Inicializar DataTable
+    $('#datatable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        }
+    });
 
-        $(".btnEditar").click(function() {
-            var id = $(this).attr('id');
-            $.ajax({
-                url: "{{ route('admin.routezones.edit', '_id') }}".replace('_id', id),
-                type: "GET",
-                success: function(response) {
-                    $('#formModal .modal-body').html(response);
-                    $('#formModal').modal('show');
-                }
-            });
-        });
+    // Variables con datos desde el backend
+    var perimeters = @json($perimeter);
+    var route = {
+        start: {
+            lat: {{ $route->latitudestart }},
+            lng: {{ $route->longitudestart }}
+        },
+        end: {
+            lat: {{ $route->latitudefinal }},
+            lng: {{ $route->longitudefinal }}
+        }
+    };
 
-        $(".fmrEliminar").submit(function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: "Seguro de eliminar?",
-                text: "Esta acción es irreversible!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, eliminar!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            });
-        });
-
-        var perimeters = @json($perimeter);
-        var route = {
-            start: {
-                lat: {{ $route->latitudestart }},
-                lng: {{ $route->longitudestart }}
-            },
-            end: {
-                lat: {{ $route->latitudefinal }},
-                lng: {{ $route->longitudefinal }}
-            }
+    // Inicializar el mapa
+    function initMap() {
+        var mapOptions = {
+            center: { lat: route.start.lat, lng: route.start.lng },
+            zoom: 15
         };
 
-        function initMap() {
-            var mapOptions = {
-                center: {
-                    lat: route.start.lat,
-                    lng: route.start.lng
-                },
-                zoom: 15
-            };
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        // Dibujar perímetros
+        perimeters.forEach(function(perimeter) {
+            if (!perimeter.coords || perimeter.coords.length === 0) {
+                console.warn("Perímetro sin coordenadas:", perimeter);
+                return;
+            }
 
-            var colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
-
-            // Dibujar los perímetros
-            perimeters.forEach(function(perimeter, index) {
-                var perimeterCoords = perimeter.coords;
-                var color = colors[index % colors.length];
-
-                var perimeterPolygon = new google.maps.Polygon({
-                    paths: perimeterCoords,
-                    strokeColor: color,
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: color,
-                    fillOpacity: 0.35,
-                    map: map
-                });
-            });
-
-            // Dibujar la ruta
-            var routeCoords = [route.start, route.end];
-            var routePath = new google.maps.Polyline({
-                path: routeCoords,
-                geodesic: true,
-                strokeColor: '#FF0000', // Color rojo para la ruta
-                strokeOpacity: 1.0,
+            var perimeterPolygon = new google.maps.Polygon({
+                paths: perimeter.coords.map(coord => ({ lat: coord.lat, lng: coord.lng })),
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
                 strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35,
                 map: map
             });
+        });
 
-            // Marcar los puntos de inicio y final de la ruta
-            new google.maps.Marker({
-                position: route.start,
-                map: map,
-                title: 'Inicio de la Ruta'
-            });
+        // Dibujar la ruta
+        var routePath = new google.maps.Polyline({
+            path: [route.start, route.end],
+            geodesic: true,
+            strokeColor: '#0000FF',
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+            map: map
+        });
 
-            new google.maps.Marker({
-                position: route.end,
-                map: map,
-                title: 'Final de la Ruta'
-            });
-        }
-    </script>
+        // Marcadores
+        new google.maps.Marker({
+            position: route.start,
+            map: map,
+            title: 'Inicio de la Ruta'
+        });
 
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async
-        defer></script>
+        new google.maps.Marker({
+            position: route.end,
+            map: map,
+            title: 'Final de la Ruta'
+        });
+    }
 
-    @if (session('success') !== null)
-        <script>
-            Swal.fire({
-                title: "Proceso Exitoso",
-                text: "{{ session('success') }}",
-                icon: "success"
-            });
-        </script>
-    @endif
-
-    @if (session('error') !== null)
-        <script>
-            Swal.fire({
-                title: "Error de proceso",
-                text: "{{ session('error') }}",
-                icon: "error"
-            });
-        </script>
-    @endif
+    // Inicializar el mapa
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+</script>
 @stop

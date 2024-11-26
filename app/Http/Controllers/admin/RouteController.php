@@ -93,13 +93,13 @@ class RouteController extends Controller
 
         $routezones = DB::select("
         SELECT 
-                z.id AS zone_id,
-                z.name AS zona, 
-                z.area AS area 
-            FROM routezones r2
-            INNER JOIN zones z ON z.id = r2.zone_id
-            WHERE r2.route_id = ?
-        ", [$id]);
+            z.id AS zone_id,
+            z.name AS zona, 
+            z.area AS area 
+        FROM routezones r2
+        INNER JOIN zones z ON z.id = r2.zone_id
+        WHERE r2.route_id = ?
+    ", [$id]);
 
         $zonesMap = DB::table('zones')
             ->leftJoin('zonecoords', 'zones.id', '=', 'zonecoords.zone_id')
