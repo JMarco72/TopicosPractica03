@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\Sector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,9 @@ class SectorController extends Controller
      */
     public function create()
     {
-        //
+
+        $districts = District::pluck('name', 'id'); // Genera un array clave-valor
+        return view('admin.sectors.create', compact('districts'));
     }
 
     /**
@@ -58,8 +61,27 @@ class SectorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'area' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string',
+            'district_id' => 'required|exists:districts,id',
+        ]);
+
+        try {
+            Sector::create([
+                'name' => $request->name,
+                'area' => $request->area,
+                'description' => $request->description,
+                'district_id' => $request->district_id,
+            ]);
+
+            return response()->json(['message' => 'Sector registrado correctamente'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error en el registro: ' . $th->getMessage()], 500);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -94,22 +116,53 @@ class SectorController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $sector = Sector::findOrFail($id); // Encuentra el sector o lanza un error si no existe
+        $districts = District::pluck('name', 'id'); // Obtiene los distritos en formato clave-valor
+        return view('admin.sectors.edit', compact('sector', 'districts'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'area' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string',
+            'district_id' => 'required|exists:districts,id',
+        ]);
+
+        try {
+            $sector = Sector::findOrFail($id);
+
+            $sector->update([
+                'name' => $request->name,
+                'area' => $request->area,
+                'description' => $request->description,
+                'district_id' => $request->district_id,
+            ]);
+
+            return response()->json(['message' => 'Sector actualizado correctamente'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error al actualizar: ' . $th->getMessage()], 500);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $sector = Sector::findOrFail($id);
+            $sector->delete();
+
+            return response()->json(['message' => 'Sector eliminado correctamente'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error al eliminar: ' . $th->getMessage()], 500);
+        }
     }
 }

@@ -1,6 +1,7 @@
 <div class="form-group">
     {!! Form::label('name', 'Nombre') !!}
     {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Nombre de la marca', 'required']) !!}
+    <small class="form-text text-muted">Ejemplo: Marca A, Marca B.</small>
 </div>
 <div class="form-group">
     {!! Form::label('description', 'Descripción') !!}
@@ -8,11 +9,9 @@
         'class' => 'form-control',
         'placeholder' => 'Descripción de la marca',
     ]) !!}
+    <small class="form-text text-muted">Opcional: Describe una caracteristicas importantes.</small>
 </div>
-<!--<div class="form-group">
-    <label for="logo">Seleccione una imagen</label><br>
-    <input type="file" name="logo" accept="image/*">
-</div>-->
+
 <div class="form-row">
     <div class="form-group col-3">
         {!! Form::file('logo', [

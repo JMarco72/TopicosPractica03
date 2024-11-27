@@ -15,7 +15,7 @@ class DepartmentSeeder extends Seeder
     {
         $d1 = new Department();
         $d1->name = 'Lambayeque';
-        $d1->code = '14001';   
+        $d1->code = '140301';   
         $d1->save();
     }
 }
