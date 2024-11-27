@@ -14,21 +14,21 @@ class SectorSeeder extends Seeder
     public function run(): void
     {
         $s1 = new Sector();
-        $s1->name = 'Sector 01';
+        $s1->name = 'Sector A';
         $s1->area = '100';
         $s1->district_id = 1;
         $s1->save();
 
         $s2 = new Sector();
-        $s2->name = 'Sector 02';
-        $s2->area = '100';
-        $s2->district_id = 1;
+        $s2->name = 'Sector B';
+        $s2->area = '80';
+        $s2->district_id = 2;
         $s2->save();
 
         $s3 = new Sector();
-        $s3->name = 'Sector 03';
-        $s3->area = '100';
-        $s3->district_id = 1;
+        $s3->name = 'Sector C';
+        $s3->area = '120';
+        $s3->district_id = 5;
         $s3->save();
     }
 }
