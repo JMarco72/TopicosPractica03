@@ -21,13 +21,15 @@ class HorariesController extends Controller
         $id = session('activitie_id');
         $act = Activitie::find($id);
 
-        $horaries = DB::select('SELECT HR.id, HR.day, v.name as vehicle, U.name as conductor, TM.name as type, HR.starttime as hori, HR.lasttime as horf FROM horaries HR
-            INNER JOIN vehicles V ON HR.vehicle_id=V.id
-            INNER JOIN vehicleoccupants VO ON V.id=VO.vehicle_id
-            INNER JOIN users u ON vo.user_id=u.id
-            INNER JOIN activities AC ON HR.activitie_id=AC.id
-            INNER JOIN typemantenimientos TM ON HR.typemantenimiento_id=TM.id
-            WHERE vo.usertype_id=3 AND HR.activitie_id= ?', [$id]);
+        $horaries = DB::select('SELECT HR.id, HR.day, v.name as vehicle, U.name as conductor, TM.name as type, HR.starttime as hori, HR.lasttime as horf 
+            FROM horaries HR
+            INNER JOIN vehicles V ON HR.vehicle_id = V.id
+            INNER JOIN vehicleoccupants VO ON V.id = VO.vehicle_id
+            INNER JOIN users U ON VO.user_id = U.id
+            INNER JOIN activities AC ON HR.activitie_id = AC.id
+            INNER JOIN typemantenimientos TM ON HR.typemantenimiento_id = TM.id
+            WHERE VO.usertype_id = 2 AND HR.activitie_id = ?', [$id]);
+
 
         return view('admin.horaries.index', compact('act', 'horaries'));
     }

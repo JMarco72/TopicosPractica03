@@ -33,8 +33,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UsertypesSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(TypemantenimientoSeeder::class);   
 
         $this->call(VehicleSeeder::class);              // crear el procedure: sp_vehicles()
         $this->call(ZoneSeeder::class);              // crear el procedure: sp_zones()
+        
     }
 }

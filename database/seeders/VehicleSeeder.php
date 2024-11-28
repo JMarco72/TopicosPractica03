@@ -13,6 +13,43 @@ class VehicleSeeder extends Seeder
      */
     public function run(): void
     {
+
+
+        DB::table('vehicles')->insert([
+            [
+                'name' => 'Camión Ford',
+                'code' => 'FORD123',
+                'plate' => 'ABC-1234',
+                'year' => '2020',
+                'occupant_capacity' => 3,
+                'load_capacity' => 12000.50,
+                'description' => 'Camión para transporte de carga pesada',
+                'status' => 1, // 1: Activo
+                'brand_id' => 1,
+                'model_id' => 1,
+                'type_id' => 1,
+                'color_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Van Toyota',
+                'code' => 'TOYOTA567',
+                'plate' => 'XYZ-7890',
+                'year' => '2018',
+                'occupant_capacity' => 12,
+                'load_capacity' => 2000.00,
+                'description' => 'Van para transporte de personal',
+                'status' => 1, // 1: Activo
+                'brand_id' => 2,
+                'model_id' => 2,
+                'type_id' => 2,
+                'color_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+        
         // Crea el procedimiento almacenado
         DB::unprepared('
             CREATE PROCEDURE `recicla_usat`.`sp_vehicles`()
