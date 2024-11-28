@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mantenimiento', function (Blueprint $table) {
+        Schema::create('actions', function (Blueprint $table) {
             $table->id();
-            $table->string("name", 100);
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
+            $table->date('date');
+            $table->string('description');
+            $table->unsignedBigInteger('horarie_id');
+            $table->foreign('horarie_id')->references('id')->on('horaries');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mantenimiento');
+        Schema::dropIfExists('actions');
     }
 };

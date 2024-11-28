@@ -402,11 +402,9 @@ return [
                 ],
             ]
         ],
-
-
         [
             'text' => 'Mantenimiento',
-            'route' => 'admin.brands.index',
+            'route' => 'admin.activities.index',
             'icon' => 'fas fa-clock',
         ],
 

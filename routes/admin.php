@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\ActionsController;
+use App\Http\Controllers\Admin\ActivitiesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\BrandmodelController;
+use App\Http\Controllers\Admin\HorariesController;
+use App\Http\Controllers\admin\MantenimientoController;
 use App\Http\Controllers\Admin\OccupantsController;
 
 use App\Http\Controllers\admin\ProgrammingsController;
@@ -59,3 +63,8 @@ Route::post('occupants/confirm-assignment', [OccupantsController::class, 'confir
 
 Route::get('/vehicles/{id}', [VehicleController::class, 'showOccupants'])->name('admin.vehicles.occupants');
 
+
+
+Route::resource('/activitie', ActivitiesController::class)->names('admin.activities');
+Route::resource('/horarie', HorariesController::class)->names('admin.horaries');
+Route::resource('/action', ActionsController::class)->names('admin.actions');

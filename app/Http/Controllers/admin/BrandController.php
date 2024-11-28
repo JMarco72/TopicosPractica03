@@ -19,34 +19,6 @@ class BrandController extends Controller
         return view('admin.brands.index', compact('brands'));
     }*/
 
-    /*public function index(Request $request)
-    {
-        $brands = Brand::all();
-
-        if ($request->ajax()) {
-
-
-            return DataTables::of($brands)
-                ->addColumn('logo', function ($brand) {
-                    return '<img src="' . ($brand->logo == '' ? asset('storage/brand_logo/no_image.png') : asset($brand->logo)) . '" width="100" height="50">';
-                })
-                ->addColumn('edit', function ($brand) {
-                    return '<button class="btnEditar btn btn-primary btn-sm" id=' . $brand->id . '><i class="fas fa-edit"></i></button>';
-                })
-                ->addColumn('delete', function ($brand) {
-                    return '
-                <form action="' . route('admin.brands.destroy', $brand->id) . '" method="POST" class="frmEliminar" style="display:inline;">
-                    ' . csrf_field() . method_field('DELETE') . '
-                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                </form>';
-                })
-                ->rawColumns(['logo', 'edit', 'delete'])  // Indica que estas columnas contienen HTML
-                ->make(true);  // Retorna el JSON esperado por DataTables
-        } else {
-            return view('admin.brands.index', compact('brands'));
-        }
-    }*/
-
     public function index(Request $request)
     {
         $brands = Brand::all();
